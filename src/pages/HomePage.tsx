@@ -97,18 +97,19 @@ export function HomePage() {
               MONOPAY
             </Typography>
             
-            <Typography
+             <Typography
               variant="h5"
               component="h2"
               sx={{
                 fontWeight: 600,
                 color: '#94A3B8',
                 letterSpacing: '0.05em',
-                maxWidth: 600,
+                maxWidth: 640,
                 fontSize: { xs: '1rem', sm: '1.25rem' },
+                lineHeight: 1.5,
               }}
             >
-              Serverless P2P Monopoly City Electronic Trading Unit & Banking Companion
+              Play Monopoly City without paper money. A serverless, peer-to-peer banking companion featuring a built-in virtual dice roller, transaction log, and electronic trading unit emulator with sound effects.
             </Typography>
           </Stack>
 

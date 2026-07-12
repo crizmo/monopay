@@ -24,7 +24,7 @@ export function Layout({ children, title = 'MONOPAY', actions, darkMode = false 
 
   useEffect(() => {
     if (title === 'MONOPAY') {
-      document.title = 'MonoPay - Serverless Monopoly City Electronic Trading Unit & Dice Banker';
+      document.title = 'MonoPay - Monopoly City Electronic Banker & Trading Unit Emulator';
     } else {
       document.title = `${title} | MonoPay`;
     }
