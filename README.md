@@ -106,8 +106,3 @@ monopay/
 └── package.json            # Script runs & dependencies manifest
 ```
 
----
-
-## 📜 License
-
-MIT License. Feel free to clone, edit, or deploy custom Monopoly bank rules!
