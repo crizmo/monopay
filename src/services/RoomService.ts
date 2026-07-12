@@ -1,10 +1,13 @@
 import { joinRoom, selfId } from 'trystero';
 import type { GameState } from '../types';
 
-const TRACKERS = [
-  'wss://tracker.openwebtorrent.com',
-  'wss://tracker.webtorrent.dev',
-  'wss://tracker.files.fm:7073',
+const RELAYS = [
+  'wss://relay.damus.io',
+  'wss://nos.lol',
+  'wss://relay.nostr.band',
+  'wss://relay.snort.social',
+  'wss://nostr.mom',
+  'wss://pub.nos.lol',
 ];
 
 const RTC_CONFIG = {
@@ -58,7 +61,7 @@ class RoomService {
     this._roomCode = roomCode;
 
     this.room = joinRoom(
-      { appId: 'com.monopay', trackerUrls: TRACKERS, rtcConfig: RTC_CONFIG },
+      { appId: 'com.monopay', relayConfig: { urls: RELAYS }, rtcConfig: RTC_CONFIG },
       roomCode
     );
     this.stateUpdate = this.room.makeAction('state-update');
@@ -85,7 +88,7 @@ class RoomService {
     this._roomCode = roomCode;
 
     this.room = joinRoom(
-      { appId: 'com.monopay', trackerUrls: TRACKERS, rtcConfig: RTC_CONFIG },
+      { appId: 'com.monopay', relayConfig: { urls: RELAYS }, rtcConfig: RTC_CONFIG },
       roomCode
     );
     this.stateUpdate = this.room.makeAction('state-update');
