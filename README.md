@@ -1,11 +1,5 @@
 # MonoPay - Serverless Monopoly City Electronic Trading Unit & Dice Banker App
 
-MonoPay is a high-performance, real-time, peer-to-peer web application designed to serve as the ultimate banking companion and electronic trading unit emulator for **Monopoly City** (and traditional Monopoly board games). 
-
-Designed to completely eliminate physical paper money, calculator errors, and sluggish gameplay, MonoPay coordinates transactions, balance tallies, and board game actions serverlessly. By utilizing WebRTC, clients connect directly from browser-to-browser with zero database storage, user sign-ups, or cloud servers.
-
----
-
 ## 🎲 Core Features & SEO Highlights
 
 ### 1. Monopoly City Electronic Trading Unit Emulator
