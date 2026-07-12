@@ -103,7 +103,7 @@ class RoomService {
 
   sendRejectJoin(reason: string, peerId?: string): void {
     if (peerId) {
-      this.rejectJoin?.send({ reason });
+      this.rejectJoin?.send({ reason }, { target: peerId });
     } else {
       this.rejectJoin?.send({ reason });
     }

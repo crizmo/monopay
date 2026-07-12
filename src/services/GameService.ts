@@ -20,14 +20,25 @@ export function addPlayer(
   name: string,
   peerId: string
 ): { state: GameState; player: Player } | { error: string } {
+  const existingPlayer = state.players.find((p) => p.name === name);
+  if (existingPlayer) {
+    const updatedPlayers = state.players.map((p) =>
+      p.name === name ? { ...p, peerId, isConnected: true } : p
+    );
+    return {
+      state: {
+        ...state,
+        players: updatedPlayers,
+      },
+      player: { ...existingPlayer, peerId, isConnected: true },
+    };
+  }
+
   if (state.players.length >= state.maxPlayers) {
     return { error: 'Game is full' };
   }
   if (state.status !== 'lobby') {
     return { error: 'Game already started' };
-  }
-  if (state.players.some((p) => p.name === name)) {
-    return { error: 'Name already taken' };
   }
 
   const colorIndex = state.players.length % PLAYER_COLORS.length;

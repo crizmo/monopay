@@ -87,6 +87,27 @@ export function GameDashboardPage() {
     return () => { unsubLeave(); unsubJoin(); };
   }, [isHost]);
 
+  useEffect(() => {
+    if (isHost) return;
+    const unsubJoin = roomService.onPeerJoin(() => {
+      const s = gameStateRef.current;
+      if (!s) return;
+
+      const rawCurrentPlayer = localStorage.getItem('monopay_current_player');
+      if (rawCurrentPlayer) {
+        try {
+          const myPlayer = JSON.parse(rawCurrentPlayer);
+          if (myPlayer && myPlayer.name) {
+            roomService.sendJoinRequest(myPlayer.name);
+          }
+        } catch {
+          // ignore
+        }
+      }
+    });
+    return () => { unsubJoin(); };
+  }, [isHost]);
+
   // Banker applies action to a player (Pass GO, Tax, Build, etc.)
   const applyBankerAction = (playerId: string, amount: number, description: string, type: TransactionType) => {
     if (!gameState) return;

@@ -34,6 +34,7 @@ export function JoinGamePage() {
   const [joining, setJoining] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const gameStateRef = useRef<GameState | null>(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -52,6 +53,7 @@ export function JoinGamePage() {
 
     cleanupRefs.current.push(
       roomService.onStateUpdate((state) => {
+        gameStateRef.current = state;
         setGameState(state);
         setJoining(false);
         setWaiting(true);
@@ -62,6 +64,7 @@ export function JoinGamePage() {
       roomService.onReject((data) => {
         setJoining(false);
         setSnackbar({ open: true, message: data.reason, severity: 'error' });
+        gameStateRef.current = null;
         roomService.cleanup();
       }),
       roomService.onPeerJoin(() => {
@@ -69,7 +72,16 @@ export function JoinGamePage() {
           clearTimeout(timeoutRef.current);
           timeoutRef.current = null;
         }
-        roomService.sendJoinRequest(playerName.trim());
+
+        const currentGameState = gameStateRef.current;
+        if (!currentGameState) {
+          roomService.sendJoinRequest(playerName.trim());
+        } else {
+          const myPlayer = currentGameState.players.find((p) => p.name === playerName.trim());
+          if (!myPlayer || !myPlayer.isConnected) {
+            roomService.sendJoinRequest(playerName.trim());
+          }
+        }
       })
     );
 
@@ -80,6 +92,7 @@ export function JoinGamePage() {
         message: 'Could not find the host. Check the room code and try again.',
         severity: 'error',
       });
+      gameStateRef.current = null;
       roomService.cleanup();
     }, 15_000);
   };
