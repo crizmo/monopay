@@ -30,7 +30,7 @@ import { Layout } from '../components/Layout';
 import { WaitingAnimation } from '../components/WaitingAnimation';
 import { generateQRCode, generateJoinLink } from '../services/QRService';
 import { joinRoom, selfId } from 'trystero';
-import type { GameState, Player, HostMessage, ClientMessage } from '../types';
+import type { GameState, Player } from '../types';
 import { PLAYER_COLORS, DEFAULT_STARTING_BALANCE, DISTRICT_STRIPS } from '../types';
 import { addPlayer, createGameState, startGame as startGameState } from '../services/GameService';
 import { formatMoney } from '../utils/format';
@@ -56,11 +56,15 @@ export function CreateGamePage() {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const [gameState, setGameState] = useState<GameState | null>(null);
 
-  const roomRef = useRef<ReturnType<typeof joinRoom> | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const roomRef = useRef<any>(null);
   const gameStateRef = useRef<GameState | null>(null);
-  const stateUpdateRef = useRef<ReturnType<ReturnType<typeof joinRoom>['makeAction']<GameState>> | null>(null);
-  const joinRequestRef = useRef<ReturnType<ReturnType<typeof joinRoom>['makeAction']<{ playerName: string }>> | null>(null);
-  const rejectJoinRef = useRef<ReturnType<ReturnType<typeof joinRoom>['makeAction']<{ reason: string }>> | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stateUpdateRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const joinRequestRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rejectJoinRef = useRef<any>(null);
 
   const broadcastState = useCallback((state: GameState) => {
     if (stateUpdateRef.current) {
@@ -75,9 +79,9 @@ export function CreateGamePage() {
     const room = joinRoom({ appId: 'com.monopay' }, code);
     roomRef.current = room;
 
-    const stateUpdate = room.makeAction<GameState>('state-update');
-    const joinRequest = room.makeAction<{ playerName: string }>('join-request');
-    const rejectJoin = room.makeAction<{ reason: string }>('reject-join');
+    const stateUpdate = room.makeAction('state-update');
+    const joinRequest = room.makeAction('join-request');
+    const rejectJoin = room.makeAction('reject-join');
     stateUpdateRef.current = stateUpdate;
     joinRequestRef.current = joinRequest;
     rejectJoinRef.current = rejectJoin;
@@ -118,7 +122,8 @@ export function CreateGamePage() {
       broadcastState(updated);
     };
 
-    joinRequest.onMessage = (data: { playerName: string }, { peerId }: { peerId: string }) => {
+    joinRequest.onMessage = (rawData, { peerId }) => {
+      const data = rawData as { playerName: string };
       const currentState = gameStateRef.current;
       if (!currentState) return;
       const result = addPlayer(currentState, data.playerName, peerId);

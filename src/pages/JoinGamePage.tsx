@@ -54,11 +54,12 @@ export function JoinGamePage() {
     const room = joinRoom({ appId: 'com.monopay' }, roomCode.trim());
     roomRef.current = room;
 
-    const stateUpdate = room.makeAction<GameState>('state-update');
-    const joinRequest = room.makeAction<{ playerName: string }>('join-request');
-    const rejectJoin = room.makeAction<{ reason: string }>('reject-join');
+    const stateUpdate = room.makeAction('state-update');
+    const joinRequest = room.makeAction('join-request');
+    const rejectJoin = room.makeAction('reject-join');
 
-    stateUpdate.onMessage = (data) => {
+    stateUpdate.onMessage = (rawData) => {
+      const data = rawData as unknown as GameState;
       gameStateRef.current = data;
       setGameState(data);
       setJoining(false);
@@ -71,7 +72,8 @@ export function JoinGamePage() {
       }
     };
 
-    rejectJoin.onMessage = (data) => {
+    rejectJoin.onMessage = (rawData) => {
+      const data = rawData as unknown as { reason: string };
       setJoining(false);
       setSnackbar({ open: true, message: data.reason, severity: 'error' });
       room.leave();
