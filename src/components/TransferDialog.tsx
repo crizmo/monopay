@@ -67,6 +67,7 @@ export function TransferDialog({ open, onClose, onConfirm, players, defaultFrom,
     const parsed = parseFloat(amount);
     if (senderId && receiverId && senderId !== receiverId && parsed > 0 && description.trim()) {
       onConfirm(senderId, receiverId, parsed, description.trim());
+      onClose();
     }
   };
 

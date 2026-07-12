@@ -9,6 +9,7 @@ import {
   Alert,
   IconButton,
   Chip,
+  Grid,
 } from '@mui/material';
 import {
   SwapHoriz as TransferIcon,
@@ -224,189 +225,198 @@ export function GameDashboardPage() {
           </Stack>
         </Paper>
 
-        {/* My Balance */}
-        {currentPlayer && (
-          <Paper elevation={0} sx={{ p: 3, textAlign: 'center', bgcolor: '#FFFFFF', border: '2px solid #E8E0D4', borderTop: `4px solid ${currentPlayer.color}`, borderRadius: 3 }}>
-            <Typography variant="body2" sx={{ color: '#9E9E9E', fontWeight: 600, mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.7rem' }}>Your Balance</Typography>
-            <AnimatedBalance balance={currentPlayer.balance} size="large" />
-          </Paper>
-        )}
+        <Grid container spacing={3}>
+          {/* Left Column: Balance, Players & History */}
+          <Grid item xs={12} md={6}>
+            <Stack spacing={3}>
+              {/* My Balance */}
+              {currentPlayer && (
+                <Paper elevation={0} sx={{ p: 3, textAlign: 'center', bgcolor: '#FFFFFF', border: '2px solid #E8E0D4', borderTop: `4px solid ${currentPlayer.color}`, borderRadius: 3 }}>
+                  <Typography variant="body2" sx={{ color: '#9E9E9E', fontWeight: 600, mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.7rem' }}>Your Balance</Typography>
+                  <AnimatedBalance balance={currentPlayer.balance} size="large" />
+                </Paper>
+              )}
 
-        {/* Players */}
-        <Box>
-          <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 1.5, px: 0.5 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>Players</Typography>
-            {selectedPlayer && (
-              <Chip label={`Selected: ${selectedPlayer.name}`} size="small" onDelete={() => setSelectedPlayerId(null)}
-                sx={{ height: 24, bgcolor: `${selectedPlayer.color}15`, color: selectedPlayer.color, fontWeight: 600, border: `1px solid ${selectedPlayer.color}30` }} />
-            )}
-          </Stack>
-          <Stack spacing={1}>
-            {gameState.players.map((player) => (
-              <PlayerCard key={player.id} player={player} isSelected={selectedPlayerId === player.id}
-                isCurrentPlayer={player.peerId === roomService.getSelfId()}
-                onTap={(id) => setSelectedPlayerId(id === selectedPlayerId ? null : id)} />
-            ))}
-            {gameState.players.length === 0 && (
-              <Paper elevation={0} sx={{ p: 3, textAlign: 'center', bgcolor: '#FFFFFF', border: '2px dashed #E8E0D4', borderRadius: 3 }}>
-                <Typography variant="body2" color="text.secondary">Waiting for players to join...</Typography>
-              </Paper>
-            )}
-          </Stack>
-        </Box>
+              {/* Players */}
+              <Box>
+                <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 1.5, px: 0.5 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>Players</Typography>
+                  {selectedPlayer && (
+                    <Chip label={`Selected: ${selectedPlayer.name}`} size="small" onDelete={() => setSelectedPlayerId(null)}
+                      sx={{ height: 24, bgcolor: `${selectedPlayer.color}15`, color: selectedPlayer.color, fontWeight: 600, border: `1px solid ${selectedPlayer.color}30` }} />
+                  )}
+                </Stack>
+                <Stack spacing={1.25}>
+                  {gameState.players.map((player) => (
+                    <PlayerCard key={player.id} player={player} isSelected={selectedPlayerId === player.id}
+                      isCurrentPlayer={player.peerId === roomService.getSelfId()}
+                      onTap={(id) => setSelectedPlayerId(id === selectedPlayerId ? null : id)} />
+                  ))}
+                  {gameState.players.length === 0 && (
+                    <Paper elevation={0} sx={{ p: 3, textAlign: 'center', bgcolor: '#FFFFFF', border: '2px dashed #E8E0D4', borderRadius: 3 }}>
+                      <Typography variant="body2" color="text.secondary">Waiting for players to join...</Typography>
+                    </Paper>
+                  )}
+                </Stack>
+              </Box>
 
-        {/* MY ACTIONS — available to all players */}
-        <Box>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1565C0', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem', mb: 1.5, px: 0.5 }}>
-            Your Actions
-          </Typography>
-          <Stack direction="row" spacing={1.5}>
-            <Button
-              variant="contained"
-              fullWidth
-              startIcon={<SendIcon />}
-              onClick={() => { setTransferDefaultFrom(currentPlayer?.id); setTransferDefaultTo(undefined); setTransferOpen(true); }}
-              sx={{
-                py: 2, borderRadius: 3, bgcolor: '#1565C0', color: '#fff', fontWeight: 700,
-                boxShadow: '0 4px 16px rgba(21,101,192,0.3)',
-                '&:hover': { bgcolor: '#0D47A1', boxShadow: '0 6px 20px rgba(21,101,192,0.4)' },
-              }}
-            >
-              <Stack sx={{ alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.2 }}>Send Money</Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.6rem' }}>to player or bank</Typography>
-              </Stack>
-            </Button>
-            <Button
-              variant="contained"
-              fullWidth
-              startIcon={<BankIcon />}
-              onClick={() => { setTransferDefaultFrom(currentPlayer?.id); setTransferDefaultTo(BANK_PLAYER_ID); setTransferOpen(true); }}
-              sx={{
-                py: 2, borderRadius: 3, bgcolor: '#E65100', color: '#fff', fontWeight: 700,
-                boxShadow: '0 4px 16px rgba(230,81,0,0.3)',
-                '&:hover': { bgcolor: '#BF360C', boxShadow: '0 6px 20px rgba(230,81,0,0.4)' },
-              }}
-            >
-              <Stack sx={{ alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.2 }}>Pay Bank</Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.6rem' }}>send to the bank</Typography>
-              </Stack>
-            </Button>
-          </Stack>
-        </Box>
-
-        {/* BANKER CONTROLS — only visible to host */}
-        {isHost && (
-          <Box>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1.5, px: 0.5 }}>
-              <BankIcon sx={{ color: '#1565C0', fontSize: 18 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1565C0', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>
-                Banker Controls
-              </Typography>
-              {!selectedPlayer && (
-                <Typography variant="caption" color="text.secondary" sx={{ ml: 1, fontSize: '0.65rem' }}>(select a player first)</Typography>
+              {/* Recent Transactions */}
+              {gameState.transactions.length > 0 && (
+                <Box>
+                  <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 1.5, px: 0.5 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>Recent Activity</Typography>
+                    <Button size="small" onClick={() => navigate('/transactions')} sx={{ color: '#2E7D32', fontWeight: 600, fontSize: '0.7rem' }}>View All</Button>
+                  </Stack>
+                  <Stack spacing={1}>
+                    {gameState.transactions.slice(0, 5).map((tx) => {
+                      const player = gameState.players.find((p) => p.id === tx.playerId);
+                      const sender = tx.senderId ? gameState.players.find((p) => p.id === tx.senderId) : null;
+                      const receiver = tx.receiverId ? gameState.players.find((p) => p.id === tx.receiverId) : null;
+                      const isCredit = tx.type === 'credit' || (tx.type === 'transfer' && tx.playerId === tx.receiverId);
+                      return (
+                        <Paper key={tx.id} elevation={0} sx={{ p: 1.5, bgcolor: '#FFFFFF', border: '1px solid #E8E0D4', borderLeft: `3px solid ${isCredit ? '#2E7D32' : '#C62828'}`, borderRadius: 2 }}>
+                          <Stack direction="row" sx={{ alignItems: 'center' }}>
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description}</Typography>
+                              <Typography variant="caption" sx={{ color: '#9E9E9E', fontSize: '0.65rem' }}>
+                                {player?.name} {tx.type === 'transfer' ? (isCredit ? `from ${sender?.name}` : `to ${receiver?.name}`) : ''}
+                              </Typography>
+                            </Box>
+                            <Typography sx={{ fontWeight: 800, color: isCredit ? '#2E7D32' : '#C62828', fontFamily: '"Bungee", cursive', fontSize: '0.85rem' }}>
+                              {isCredit ? '+' : '-'}{formatMoney(tx.amount)}
+                            </Typography>
+                          </Stack>
+                        </Paper>
+                      );
+                    })}
+                  </Stack>
+                </Box>
               )}
             </Stack>
+          </Grid>
 
-            {/* Banker can give money (credits) */}
-            <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600, px: 0.5, fontSize: '0.65rem' }}>Give Money</Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, mb: 1.5, mt: 0.5 }}>
-              {[
-                { label: 'Pass GO', icon: <PassGoIcon />, amount: 2_000_000, desc: 'Pass GO - Collect $2M', color: '#2E7D32', bg: '#E8F5E9' },
-                { label: 'Rent', icon: <PayIcon />, amount: 500_000, desc: 'Rent Collection', color: '#0288D1', bg: '#E1F5FE' },
-                { label: 'Stadium', icon: <StadiumIcon />, amount: 1_000_000, desc: 'Stadium Revenue', color: '#F9A825', bg: '#FFFDE7' },
-              ].map((btn) => (
-                <Button key={btn.label} variant="contained" fullWidth disabled={!selectedPlayer}
-                  onClick={() => selectedPlayer && applyBankerAction(selectedPlayer.id, btn.amount, btn.desc, 'credit')}
-                  sx={{ flexDirection: 'column', py: 1.5, px: 0.5, minHeight: 72, bgcolor: btn.bg, color: btn.color, borderRadius: 2, boxShadow: 'none', '&:hover': { bgcolor: btn.color, color: '#fff', transform: 'translateY(-1px)' }, '&.Mui-disabled': { bgcolor: '#F5F5F5', color: '#BDBDBD' }, transition: 'all 0.15s ease' }}
-                >
-                  <Box sx={{ color: 'inherit', mb: 0.5 }}>{btn.icon}</Box>
-                  <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.65rem', lineHeight: 1.2, color: 'inherit' }}>{btn.label}</Typography>
-                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.6rem', fontFamily: '"Bungee", cursive', color: 'inherit', lineHeight: 1 }}>+{formatMoney(btn.amount)}</Typography>
-                </Button>
-              ))}
-            </Box>
-
-            {/* Banker can charge money (debits) */}
-            <Typography variant="caption" sx={{ color: '#C62828', fontWeight: 600, px: 0.5, fontSize: '0.65rem' }}>Charge Money</Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, mb: 1.5, mt: 0.5 }}>
-              {[
-                { label: 'Pay Rent', icon: <PayIcon />, amount: 500_000, desc: 'Rent Payment', color: '#E65100', bg: '#FFF3E0' },
-                { label: 'Build', icon: <BuildIcon />, amount: 1_000_000, desc: 'Residential Building', color: '#0288D1', bg: '#E1F5FE' },
-                { label: 'Industry', icon: <FactoryIcon />, amount: 2_000_000, desc: 'Industrial Building', color: '#1565C0', bg: '#E3F2FD' },
-                { label: 'Luxury Tax', icon: <LuxuryIcon />, amount: 1_000_000, desc: 'Luxury Tax', color: '#E65100', bg: '#FFF3E0' },
-                { label: 'Income Tax', icon: <TaxIcon />, amount: 2_000_000, desc: 'Income Tax', color: '#C62828', bg: '#FFEBEE' },
-                { label: 'Custom', icon: <AddIcon />, action: 'custom-debit', color: '#757575', bg: '#F5F5F5' },
-              ].map((btn) => (
-                <Button key={btn.label} variant="contained" fullWidth disabled={!selectedPlayer}
-                  onClick={() => {
-                    if (!selectedPlayer) return;
-                    if ('action' in btn && btn.action === 'custom-debit') { setCustomType('debit'); setCustomOpen(true); }
-                    else if ('amount' in btn) applyBankerAction(selectedPlayer.id, (btn as { amount: number }).amount, (btn as { desc: string }).desc, 'debit');
-                  }}
-                  sx={{ flexDirection: 'column', py: 1.5, px: 0.5, minHeight: 72, bgcolor: btn.bg, color: btn.color, borderRadius: 2, boxShadow: 'none', '&:hover': { bgcolor: btn.color, color: '#fff', transform: 'translateY(-1px)' }, '&.Mui-disabled': { bgcolor: '#F5F5F5', color: '#BDBDBD' }, transition: 'all 0.15s ease' }}
-                >
-                  <Box sx={{ color: 'inherit', mb: 0.5 }}>{btn.icon}</Box>
-                  <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.65rem', lineHeight: 1.2, color: 'inherit' }}>{btn.label}</Typography>
-                  {'amount' in btn && (
-                    <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.6rem', fontFamily: '"Bungee", cursive', color: 'inherit', lineHeight: 1 }}>-{formatMoney((btn as { amount: number }).amount)}</Typography>
-                  )}
-                </Button>
-              ))}
-            </Box>
-
-            {/* Banker can send money via transfer dialog (Bank→Player) */}
-            <Button variant="outlined" fullWidth disabled={!selectedPlayer}
-              onClick={() => { setTransferDefaultFrom(BANK_PLAYER_ID); setTransferDefaultTo(selectedPlayer?.id); setTransferOpen(true); }}
-              sx={{ py: 1.5, borderRadius: 2, borderColor: '#1565C0', color: '#1565C0', fontWeight: 600, '&:hover': { borderColor: '#0D47A1', bgcolor: '#E3F2FD' } }}
-            >
-              Send Custom Amount from Bank
-            </Button>
-
-            {/* Remove player */}
-            {selectedPlayer && (
-              <Button variant="outlined" color="error" startIcon={<RemoveIcon />} fullWidth
-                onClick={() => handleRemovePlayer(selectedPlayer.id)}
-                sx={{ mt: 1, borderColor: '#C62828', color: '#C62828', borderRadius: 2 }}>
-                Remove {selectedPlayer.name}
-              </Button>
-            )}
-          </Box>
-        )}
-
-        {/* Recent Transactions */}
-        {gameState.transactions.length > 0 && (
-          <Box>
-            <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 1.5, px: 0.5 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>Recent Activity</Typography>
-              <Button size="small" onClick={() => navigate('/transactions')} sx={{ color: '#2E7D32', fontWeight: 600, fontSize: '0.7rem' }}>View All</Button>
-            </Stack>
-            <Stack spacing={1}>
-              {gameState.transactions.slice(0, 5).map((tx) => {
-                const player = gameState.players.find((p) => p.id === tx.playerId);
-                const sender = tx.senderId ? gameState.players.find((p) => p.id === tx.senderId) : null;
-                const receiver = tx.receiverId ? gameState.players.find((p) => p.id === tx.receiverId) : null;
-                const isCredit = tx.type === 'credit' || (tx.type === 'transfer' && tx.playerId === tx.receiverId);
-                return (
-                  <Paper key={tx.id} elevation={0} sx={{ p: 1.5, bgcolor: '#FFFFFF', border: '1px solid #E8E0D4', borderLeft: `3px solid ${isCredit ? '#2E7D32' : '#C62828'}`, borderRadius: 2 }}>
-                    <Stack direction="row" sx={{ alignItems: 'center' }}>
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description}</Typography>
-                        <Typography variant="caption" sx={{ color: '#9E9E9E', fontSize: '0.65rem' }}>
-                          {player?.name} {tx.type === 'transfer' ? (isCredit ? `from ${sender?.name}` : `to ${receiver?.name}`) : ''}
-                        </Typography>
-                      </Box>
-                      <Typography sx={{ fontWeight: 800, color: isCredit ? '#2E7D32' : '#C62828', fontFamily: '"Bungee", cursive', fontSize: '0.85rem' }}>
-                        {isCredit ? '+' : '-'}{formatMoney(tx.amount)}
-                      </Typography>
+          {/* Right Column: Actions & Banker Controls */}
+          <Grid item xs={12} md={6}>
+            <Stack spacing={3}>
+              {/* MY ACTIONS — available to all players */}
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1565C0', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem', mb: 1.5, px: 0.5 }}>
+                  Your Actions
+                </Typography>
+                <Stack direction="row" spacing={1.5}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    startIcon={<SendIcon />}
+                    onClick={() => { setTransferDefaultFrom(currentPlayer?.id); setTransferDefaultTo(undefined); setTransferOpen(true); }}
+                    sx={{
+                      py: 2, borderRadius: 3, bgcolor: '#1565C0', color: '#fff', fontWeight: 700,
+                      boxShadow: '0 4px 16px rgba(21,101,192,0.3)',
+                      '&:hover': { bgcolor: '#0D47A1', boxShadow: '0 6px 20px rgba(21,101,192,0.4)' },
+                    }}
+                  >
+                    <Stack sx={{ alignItems: 'center' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.2 }}>Send Money</Typography>
+                      <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.6rem' }}>to player or bank</Typography>
                     </Stack>
-                  </Paper>
-                );
-              })}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    startIcon={<BankIcon />}
+                    onClick={() => { setTransferDefaultFrom(currentPlayer?.id); setTransferDefaultTo(BANK_PLAYER_ID); setTransferOpen(true); }}
+                    sx={{
+                      py: 2, borderRadius: 3, bgcolor: '#E65100', color: '#fff', fontWeight: 700,
+                      boxShadow: '0 4px 16px rgba(230,81,0,0.3)',
+                      '&:hover': { bgcolor: '#BF360C', boxShadow: '0 6px 20px rgba(230,81,0,0.4)' },
+                    }}
+                  >
+                    <Stack sx={{ alignItems: 'center' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.2 }}>Pay Bank</Typography>
+                      <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.6rem' }}>send to the bank</Typography>
+                    </Stack>
+                  </Button>
+                </Stack>
+              </Box>
+
+              {/* BANKER CONTROLS — only visible to host */}
+              {isHost && (
+                <Box>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1.5, px: 0.5 }}>
+                    <BankIcon sx={{ color: '#1565C0', fontSize: 18 }} />
+                    <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#1565C0', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>
+                      Banker Controls
+                    </Typography>
+                    {!selectedPlayer && (
+                      <Typography variant="caption" color="text.secondary" sx={{ ml: 1, fontSize: '0.65rem' }}>(select a player first)</Typography>
+                    )}
+                  </Stack>
+
+                  {/* Banker can give money (credits) */}
+                  <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600, px: 0.5, fontSize: '0.65rem' }}>Give Money</Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, mb: 1.5, mt: 0.5 }}>
+                    {[
+                      { label: 'Pass GO', icon: <PassGoIcon />, amount: 2_000_000, desc: 'Pass GO - Collect $2M', color: '#2E7D32', bg: '#E8F5E9' },
+                      { label: 'Rent', icon: <PayIcon />, amount: 500_000, desc: 'Rent Collection', color: '#0288D1', bg: '#E1F5FE' },
+                      { label: 'Stadium', icon: <StadiumIcon />, amount: 1_000_000, desc: 'Stadium Revenue', color: '#F9A825', bg: '#FFFDE7' },
+                    ].map((btn) => (
+                      <Button key={btn.label} variant="contained" fullWidth disabled={!selectedPlayer}
+                        onClick={() => selectedPlayer && applyBankerAction(selectedPlayer.id, btn.amount, btn.desc, 'credit')}
+                        sx={{ flexDirection: 'column', py: 1.5, px: 0.5, minHeight: 72, bgcolor: btn.bg, color: btn.color, borderRadius: 2, boxShadow: 'none', '&:hover': { bgcolor: btn.color, color: '#fff', transform: 'translateY(-1px)' }, '&.Mui-disabled': { bgcolor: '#F5F5F5', color: '#BDBDBD' }, transition: 'all 0.15s ease' }}
+                      >
+                        <Box sx={{ color: 'inherit', mb: 0.5 }}>{btn.icon}</Box>
+                        <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.65rem', lineHeight: 1.2, color: 'inherit' }}>{btn.label}</Typography>
+                        <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.6rem', fontFamily: '"Bungee", cursive', color: 'inherit', lineHeight: 1 }}>+{formatMoney(btn.amount)}</Typography>
+                      </Button>
+                    ))}
+                  </Box>
+
+                  {/* Banker can charge money (debits) */}
+                  <Typography variant="caption" sx={{ color: '#C62828', fontWeight: 600, px: 0.5, fontSize: '0.65rem' }}>Charge Money</Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, mb: 1.5, mt: 0.5 }}>
+                    {[
+                      { label: 'Industry', icon: <FactoryIcon />, amount: 2_000_000, desc: 'Industrial Building', color: '#1565C0', bg: '#E3F2FD' },
+                      { label: 'Income Tax', icon: <TaxIcon />, amount: 2_000_000, desc: 'Income Tax', color: '#C62828', bg: '#FFEBEE' },
+                      { label: 'Custom', icon: <AddIcon />, action: 'custom-debit', color: '#757575', bg: '#F5F5F5' },
+                    ].map((btn) => (
+                      <Button key={btn.label} variant="contained" fullWidth disabled={!selectedPlayer}
+                        onClick={() => {
+                          if (!selectedPlayer) return;
+                          if ('action' in btn && btn.action === 'custom-debit') { setCustomType('debit'); setCustomOpen(true); }
+                          else if ('amount' in btn) applyBankerAction(selectedPlayer.id, (btn as { amount: number }).amount, (btn as { desc: string }).desc, 'debit');
+                        }}
+                        sx={{ flexDirection: 'column', py: 1.5, px: 0.5, minHeight: 72, bgcolor: btn.bg, color: btn.color, borderRadius: 2, boxShadow: 'none', '&:hover': { bgcolor: btn.color, color: '#fff', transform: 'translateY(-1px)' }, '&.Mui-disabled': { bgcolor: '#F5F5F5', color: '#BDBDBD' }, transition: 'all 0.15s ease' }}
+                      >
+                        <Box sx={{ color: 'inherit', mb: 0.5 }}>{btn.icon}</Box>
+                        <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.65rem', lineHeight: 1.2, color: 'inherit' }}>{btn.label}</Typography>
+                        {'amount' in btn && (
+                          <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.6rem', fontFamily: '"Bungee", cursive', color: 'inherit', lineHeight: 1 }}>-{formatMoney((btn as { amount: number }).amount)}</Typography>
+                        )}
+                      </Button>
+                    ))}
+                  </Box>
+
+                  {/* Banker can send money via transfer dialog (Bank→Player) */}
+                  <Button variant="outlined" fullWidth disabled={!selectedPlayer}
+                    onClick={() => { setTransferDefaultFrom(BANK_PLAYER_ID); setTransferDefaultTo(selectedPlayer?.id); setTransferOpen(true); }}
+                    sx={{ py: 1.5, borderRadius: 2, borderColor: '#1565C0', color: '#1565C0', fontWeight: 600, '&:hover': { borderColor: '#0D47A1', bgcolor: '#E3F2FD' } }}
+                  >
+                    Send Custom Amount from Bank
+                  </Button>
+
+                  {/* Remove player */}
+                  {selectedPlayer && (
+                    <Button variant="outlined" color="error" startIcon={<RemoveIcon />} fullWidth
+                      onClick={() => handleRemovePlayer(selectedPlayer.id)}
+                      sx={{ mt: 1, borderColor: '#C62828', color: '#C62828', borderRadius: 2 }}>
+                      Remove {selectedPlayer.name}
+                    </Button>
+                  )}
+                </Box>
+              )}
             </Stack>
-          </Box>
-        )}
+          </Grid>
+        </Grid>
       </Stack>
 
       <TransferDialog open={transferOpen} onClose={() => setTransferOpen(false)} onConfirm={handleTransfer}
