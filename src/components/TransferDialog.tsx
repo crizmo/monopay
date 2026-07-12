@@ -9,7 +9,6 @@ import {
   Stack,
   Typography,
   MenuItem,
-  Autocomplete,
 } from '@mui/material';
 import { SwapHoriz as TransferIcon } from '@mui/icons-material';
 import type { Player } from '../types';
@@ -45,14 +44,14 @@ export function TransferDialog({ open, onClose, onConfirm, players }: TransferDi
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
+      <DialogTitle sx={{ borderBottom: '1px solid #E0E0E0' }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          <TransferIcon sx={{ color: 'secondary.main' }} />
+          <TransferIcon sx={{ color: '#2E7D32' }} />
           <Typography variant="h6">Transfer Funds</Typography>
         </Stack>
       </DialogTitle>
-      <DialogContent>
-        <Stack spacing={3} sx={{ mt: 1 }}>
+      <DialogContent sx={{ mt: 2 }}>
+        <Stack spacing={3}>
           <TextField
             select
             label="From (Sender)"
@@ -62,10 +61,10 @@ export function TransferDialog({ open, onClose, onConfirm, players }: TransferDi
           >
             {players.map((p) => (
               <MenuItem key={p.id} value={p.id} disabled={p.id === receiverId}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                   <Typography>{p.name}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    ({formatMoney(p.balance)})
+                  <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600 }}>
+                    {formatMoney(p.balance)}
                   </Typography>
                 </Stack>
               </MenuItem>
@@ -81,10 +80,10 @@ export function TransferDialog({ open, onClose, onConfirm, players }: TransferDi
           >
             {players.map((p) => (
               <MenuItem key={p.id} value={p.id} disabled={p.id === senderId}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                   <Typography>{p.name}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    ({formatMoney(p.balance)})
+                  <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600 }}>
+                    {formatMoney(p.balance)}
                   </Typography>
                 </Stack>
               </MenuItem>
@@ -100,13 +99,13 @@ export function TransferDialog({ open, onClose, onConfirm, players }: TransferDi
             slotProps={{
               htmlInput: { min: 1 },
               input: {
-                startAdornment: <Typography sx={{ color: 'text.secondary', mr: 1 }}>$</Typography>,
+                startAdornment: <Typography sx={{ color: '#2E7D32', mr: 1, fontWeight: 700 }}>$</Typography>,
               },
             }}
           />
 
           {sender && parseFloat(amount) > sender.balance && (
-            <Typography variant="caption" color="error">
+            <Typography variant="caption" sx={{ color: '#C62828' }}>
               Insufficient funds. Available: {formatMoney(sender.balance)}
             </Typography>
           )}
@@ -120,8 +119,8 @@ export function TransferDialog({ open, onClose, onConfirm, players }: TransferDi
           />
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose}>Cancel</Button>
+      <DialogActions sx={{ p: 2, borderTop: '1px solid #E0E0E0' }}>
+        <Button onClick={onClose} sx={{ color: '#757575' }}>Cancel</Button>
         <Button
           variant="contained"
           onClick={handleConfirm}
@@ -134,6 +133,10 @@ export function TransferDialog({ open, onClose, onConfirm, players }: TransferDi
             !description.trim() ||
             (sender ? parseFloat(amount) > sender.balance : false)
           }
+          sx={{
+            bgcolor: '#2E7D32',
+            '&:hover': { bgcolor: '#1B5E20' },
+          }}
         >
           Transfer
         </Button>

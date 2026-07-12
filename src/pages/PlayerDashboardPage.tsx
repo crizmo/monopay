@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   Button,
-  Divider,
   Avatar,
 } from '@mui/material';
 import { History as HistoryIcon, AccountBalanceWallet as WalletIcon } from '@mui/icons-material';
@@ -58,11 +57,13 @@ export function PlayerDashboardPage() {
       <Container maxWidth="sm">
         <Stack spacing={4}>
           <Paper
+            elevation={0}
             sx={{
               p: 4,
               textAlign: 'center',
-              background: 'linear-gradient(145deg, #1a2332 0%, #141b2d 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.1)',
+              bgcolor: '#FFFFFF',
+              border: '2px solid #E8E0D4',
+              borderTop: `4px solid ${currentPlayer.color}`,
             }}
           >
             <Avatar
@@ -74,12 +75,13 @@ export function PlayerDashboardPage() {
                 bgcolor: currentPlayer.color,
                 fontSize: '2rem',
                 fontWeight: 700,
+                fontFamily: '"Bungee", cursive',
                 boxShadow: `0 4px 20px ${currentPlayer.color}40`,
               }}
             >
               {currentPlayer.name.charAt(0).toUpperCase()}
             </Avatar>
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: '#333', mb: 0.5 }}>
               {currentPlayer.name}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -89,24 +91,40 @@ export function PlayerDashboardPage() {
           </Paper>
 
           <Stack direction="row" spacing={2}>
-            <Card sx={{ flex: 1, bgcolor: '#0e1630' }}>
+            <Card
+              elevation={0}
+              sx={{
+                flex: 1,
+                bgcolor: '#FFFFFF',
+                border: '1px solid #E8E0D4',
+                borderTop: '3px solid #2E7D32',
+              }}
+            >
               <CardContent sx={{ textAlign: 'center', py: 2 }}>
-                <WalletIcon sx={{ color: 'secondary.main', mb: 0.5 }} />
+                <WalletIcon sx={{ color: '#2E7D32', mb: 0.5 }} />
                 <Typography variant="body2" color="text.secondary">
                   Transactions
                 </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#2E7D32' }}>
                   {myTransactions.length}
                 </Typography>
               </CardContent>
             </Card>
-            <Card sx={{ flex: 1, bgcolor: '#0e1630' }}>
+            <Card
+              elevation={0}
+              sx={{
+                flex: 1,
+                bgcolor: '#FFFFFF',
+                border: '1px solid #E8E0D4',
+                borderTop: '3px solid #1565C0',
+              }}
+            >
               <CardContent sx={{ textAlign: 'center', py: 2 }}>
-                <HistoryIcon sx={{ color: 'primary.main', mb: 0.5 }} />
+                <HistoryIcon sx={{ color: '#1565C0', mb: 0.5 }} />
                 <Typography variant="body2" color="text.secondary">
                   Players
                 </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#1565C0' }}>
                   {gameState.players.length}
                 </Typography>
               </CardContent>
@@ -115,13 +133,14 @@ export function PlayerDashboardPage() {
 
           <Box>
             <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#333' }}>
                 Recent Transactions
               </Typography>
               <Button
                 size="small"
                 onClick={() => navigate('/transactions')}
                 endIcon={<HistoryIcon />}
+                sx={{ color: '#2E7D32' }}
               >
                 View All
               </Button>
@@ -129,7 +148,7 @@ export function PlayerDashboardPage() {
 
             <Stack spacing={1}>
               {myTransactions.length === 0 ? (
-                <Paper sx={{ p: 3, textAlign: 'center' }}>
+                <Paper elevation={0} sx={{ p: 3, textAlign: 'center', bgcolor: '#FFFFFF', border: '1px solid #E8E0D4' }}>
                   <Typography variant="body2" color="text.secondary">
                     No transactions yet
                   </Typography>

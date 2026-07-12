@@ -31,7 +31,7 @@ export function WaitingAnimation({ message = 'Waiting for players...' }: Waiting
         <CircularProgress
           size={56}
           sx={{
-            color: 'secondary.main',
+            color: '#2E7D32',
             animationDuration: '1.5s',
           }}
         />
@@ -41,13 +41,13 @@ export function WaitingAnimation({ message = 'Waiting for players...' }: Waiting
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            color: 'secondary.main',
+            color: '#2E7D32',
             fontSize: 24,
             animation: 'pulse 2s ease-in-out infinite',
           }}
         />
       </Box>
-      <Typography variant="h6" color="text.secondary">
+      <Typography variant="h6" sx={{ color: '#9E9E9E' }}>
         {message}{dots}
       </Typography>
       <style>{`

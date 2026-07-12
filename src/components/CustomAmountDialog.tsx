@@ -39,24 +39,44 @@ export function CustomAmountDialog({ open, onClose, onConfirm, playerName }: Cus
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
+      <DialogTitle sx={{ borderBottom: '1px solid #E0E0E0' }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          <MoneyIcon sx={{ color: 'secondary.main' }} />
+          <MoneyIcon sx={{ color: '#2E7D32' }} />
           <Typography variant="h6">Custom Transaction for {playerName}</Typography>
         </Stack>
       </DialogTitle>
-      <DialogContent>
-        <Stack spacing={3} sx={{ mt: 1 }}>
+      <DialogContent sx={{ mt: 2 }}>
+        <Stack spacing={3}>
           <ToggleButtonGroup
             value={type}
             exclusive
             onChange={(_, v) => v && setType(v)}
             fullWidth
           >
-            <ToggleButton value="credit" sx={{ fontWeight: 600 }}>
+            <ToggleButton
+              value="credit"
+              sx={{
+                fontWeight: 600,
+                '&.Mui-selected': {
+                  bgcolor: '#E8F5E9',
+                  color: '#2E7D32',
+                  '&:hover': { bgcolor: '#C8E6C9' },
+                },
+              }}
+            >
               Credit (+)
             </ToggleButton>
-            <ToggleButton value="debit" sx={{ fontWeight: 600 }}>
+            <ToggleButton
+              value="debit"
+              sx={{
+                fontWeight: 600,
+                '&.Mui-selected': {
+                  bgcolor: '#FFEBEE',
+                  color: '#C62828',
+                  '&:hover': { bgcolor: '#FFCDD2' },
+                },
+              }}
+            >
               Debit (-)
             </ToggleButton>
           </ToggleButtonGroup>
@@ -70,7 +90,7 @@ export function CustomAmountDialog({ open, onClose, onConfirm, playerName }: Cus
             slotProps={{
               htmlInput: { min: 1 },
               input: {
-                startAdornment: <Typography sx={{ color: 'text.secondary', mr: 1 }}>$</Typography>,
+                startAdornment: <Typography sx={{ color: '#2E7D32', mr: 1, fontWeight: 700 }}>$</Typography>,
               },
             }}
           />
@@ -84,12 +104,16 @@ export function CustomAmountDialog({ open, onClose, onConfirm, playerName }: Cus
           />
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose}>Cancel</Button>
+      <DialogActions sx={{ p: 2, borderTop: '1px solid #E0E0E0' }}>
+        <Button onClick={onClose} sx={{ color: '#757575' }}>Cancel</Button>
         <Button
           variant="contained"
           onClick={handleConfirm}
           disabled={!amount || parseFloat(amount) <= 0 || !description.trim()}
+          sx={{
+            bgcolor: '#2E7D32',
+            '&:hover': { bgcolor: '#1B5E20' },
+          }}
         >
           Apply
         </Button>

@@ -24,7 +24,10 @@ export function AnimatedBalance({ balance, size = 'medium' }: AnimatedBalancePro
         transition: 'all 0.3s ease',
         borderRadius: 3,
         px: 3,
-        py: 1,
+        py: 2,
+        bgcolor: '#FFFFFF',
+        border: '1px solid #E0E0E0',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
       }}
     >
       <Typography
@@ -32,44 +35,35 @@ export function AnimatedBalance({ balance, size = 'medium' }: AnimatedBalancePro
         sx={{
           fontSize: s.fontSize,
           fontWeight: 800,
-          background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 50%, #FFD700 100%)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: '#2E7D32',
           transition: 'all 0.3s ease',
           fontFamily: '"Bungee", cursive',
           letterSpacing: '-0.02em',
-          '&::before': {
-            content: '"$"',
-            WebkitTextFillColor: 'rgba(255, 215, 0, 0.35)',
-            fontWeight: 400,
-            mr: 0.5,
-          },
           ...(flashClass === 'flash-green' && {
-            textShadow: '0 0 30px rgba(76, 175, 80, 0.8)',
-            WebkitTextFillColor: '#4CAF50',
+            color: '#1B5E20',
+            textShadow: '0 0 20px rgba(46, 125, 50, 0.3)',
             animation: 'pulseGreen 0.6s ease',
           }),
           ...(flashClass === 'flash-red' && {
-            textShadow: '0 0 30px rgba(244, 67, 54, 0.8)',
-            WebkitTextFillColor: '#F44336',
+            color: '#C62828',
+            textShadow: '0 0 20px rgba(198, 40, 40, 0.3)',
             animation: 'pulseRed 0.6s ease',
           }),
         }}
       >
-        {formatMoney(displayBalance).replace('$', '')}
+        {formatMoney(displayBalance)}
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ fontSize: s.subtitle, mt: 0.5 }}>
+      <Typography variant="body2" sx={{ fontSize: s.subtitle, mt: 0.5, color: '#9E9E9E' }}>
         Current Balance
       </Typography>
       <style>{`
         @keyframes pulseGreen {
           0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+          50% { transform: scale(1.03); }
         }
         @keyframes pulseRed {
           0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+          50% { transform: scale(1.03); }
         }
       `}</style>
     </Box>

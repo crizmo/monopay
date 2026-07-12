@@ -77,12 +77,21 @@ export function TransactionHistoryPage() {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon color="action" />
+                    <SearchIcon sx={{ color: '#2E7D32' }} />
                   </InputAdornment>
                 ),
               },
             }}
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+                bgcolor: '#FFFFFF',
+                '& fieldset': { borderColor: '#E8E0D4' },
+                '&:hover fieldset': { borderColor: '#2E7D32' },
+                '&.Mui-focused fieldset': { borderColor: '#2E7D32', borderWidth: 2 },
+              },
+              '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+            }}
           />
 
           <Typography variant="body2" color="text.secondary">
@@ -91,14 +100,14 @@ export function TransactionHistoryPage() {
 
           <Stack spacing={1}>
             {transactions.length === 0 ? (
-              <Paper sx={{ p: 4, textAlign: 'center' }}>
+              <Paper elevation={0} sx={{ p: 4, textAlign: 'center', bgcolor: '#FFFFFF', border: '1px solid #E8E0D4' }}>
                 <Typography variant="body1" color="text.secondary">
                   No transactions found
                 </Typography>
               </Paper>
             ) : (
               transactions.map((tx) => (
-                <Paper key={tx.id} sx={{ overflow: 'hidden' }}>
+                <Paper key={tx.id} elevation={0} sx={{ overflow: 'hidden', bgcolor: '#FFFFFF', border: '1px solid #E8E0D4' }}>
                   <TransactionRow transaction={tx} />
                 </Paper>
               ))

@@ -103,7 +103,6 @@ export function CreateGamePage() {
       if (!currentState) return;
       const peerIds = currentState.players.map((p) => p.peerId);
       if (!peerIds.includes(peerId)) {
-        // New peer - wait for their join request
         return;
       }
     };
@@ -180,13 +179,13 @@ export function CreateGamePage() {
           <Stack spacing={4} sx={{ alignItems: 'center' }}>
             <Box sx={{ textAlign: 'center' }}>
               <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', mb: 1 }}>
-                <ApartmentIcon sx={{ color: 'gold', fontSize: 28 }} />
-                <FactoryIcon sx={{ color: 'gold', fontSize: 28 }} />
-                <StadiumIcon sx={{ color: 'gold', fontSize: 28 }} />
+                <ApartmentIcon sx={{ color: '#2E7D32', fontSize: 28 }} />
+                <FactoryIcon sx={{ color: '#2E7D32', fontSize: 28 }} />
+                <StadiumIcon sx={{ color: '#2E7D32', fontSize: 28 }} />
               </Stack>
               <Typography
                 variant="h4"
-                sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: 'gold', textAlign: 'center' }}
+                sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: '#2E7D32', textAlign: 'center' }}
               >
                 Monopoly City
               </Typography>
@@ -196,11 +195,14 @@ export function CreateGamePage() {
             </Box>
 
             <Paper
+              elevation={0}
               sx={{
                 p: 3,
                 width: '100%',
-                background: 'linear-gradient(180deg, rgba(255,215,0,0.05) 0%, rgba(20,27,45,0.95) 100%)',
-                border: '1px solid rgba(255,215,0,0.15)',
+                bgcolor: '#FFFFFF',
+                border: '2px solid #E8E0D4',
+                borderLeft: '4px solid #2E7D32',
+                borderRadius: 2,
               }}
             >
               <Stack spacing={3}>
@@ -210,11 +212,11 @@ export function CreateGamePage() {
                   onChange={(e) => setRoomName(e.target.value)}
                   fullWidth
                   placeholder="e.g., Friday Night Monopoly"
-                  slotProps={{ input: { style: { color: '#fff' } } }}
+                  slotProps={{ input: { style: { color: '#333' } } }}
                 />
 
                 <Box>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <Typography variant="body2" sx={{ color: '#2E7D32', fontWeight: 600 }} gutterBottom>
                     Starting Balance: {formatMoney(startingBalance)}
                   </Typography>
                   <Slider
@@ -229,7 +231,7 @@ export function CreateGamePage() {
                       { value: 50_000_000, label: '$50M' },
                       { value: 100_000_000, label: '$100M' },
                     ]}
-                    sx={{ color: 'gold' }}
+                    sx={{ color: '#2E7D32' }}
                   />
                 </Box>
 
@@ -251,7 +253,7 @@ export function CreateGamePage() {
                       { value: 10, label: '10' },
                       { value: 12, label: '12' },
                     ]}
-                    sx={{ color: 'gold' }}
+                    sx={{ color: '#2E7D32' }}
                   />
                 </Box>
 
@@ -264,10 +266,10 @@ export function CreateGamePage() {
                   sx={{
                     py: 1.5,
                     fontFamily: 'Bungee, cursive',
-                    background: 'linear-gradient(135deg, #FFD700 0%, #B8860B 100%)',
-                    color: '#0a0e1a',
+                    bgcolor: '#2E7D32',
+                    color: '#FFFFFF',
                     '&:hover': {
-                      background: 'linear-gradient(135deg, #FFE54C 0%, #DAA520 100%)',
+                      bgcolor: '#1B5E20',
                     },
                   }}
                 >
@@ -287,17 +289,20 @@ export function CreateGamePage() {
         <Stack spacing={4}>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ alignItems: 'stretch' }}>
             <Paper
+              elevation={0}
               sx={{
                 p: 3,
                 flex: 1,
-                background: 'linear-gradient(180deg, rgba(255,215,0,0.05) 0%, rgba(20,27,45,0.95) 100%)',
-                border: '1px solid rgba(255,215,0,0.15)',
+                bgcolor: '#FFFFFF',
+                border: '2px solid #E8E0D4',
+                borderLeft: '4px solid #2E7D32',
+                borderRadius: 2,
               }}
             >
               <Stack spacing={2} sx={{ alignItems: 'center' }}>
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: 'gold' }}
+                  sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: '#2E7D32' }}
                 >
                   Room Code
                 </Typography>
@@ -307,20 +312,20 @@ export function CreateGamePage() {
                     cursor: 'pointer',
                     p: 2,
                     borderRadius: 2,
-                    bgcolor: 'rgba(255, 215, 0, 0.08)',
-                    border: '1px dashed rgba(255, 215, 0, 0.3)',
+                    bgcolor: '#F5F0E8',
+                    border: '2px dashed #2E7D32',
                     textAlign: 'center',
                     width: '100%',
                     transition: 'all 0.2s',
-                    '&:hover': { bgcolor: 'rgba(255, 215, 0, 0.15)' },
+                    '&:hover': { bgcolor: 'rgba(46, 125, 50, 0.08)' },
                   }}
                 >
                   <Typography
                     variant="h3"
                     sx={{
                       fontWeight: 800,
-                      color: 'gold',
-                      fontFamily: 'monospace',
+                      color: '#2E7D32',
+                      fontFamily: '"Bungee", cursive',
                       letterSpacing: '0.2em',
                     }}
                   >
@@ -331,7 +336,7 @@ export function CreateGamePage() {
                   </Typography>
                 </Box>
 
-                <Divider sx={{ width: '100%', borderColor: 'rgba(255,215,0,0.15)' }} />
+                <Divider sx={{ width: '100%', borderColor: '#E8E0D4' }} />
 
                 <Typography variant="body2" color="text.secondary">
                   Or share this link:
@@ -345,7 +350,7 @@ export function CreateGamePage() {
                     slotProps={{ input: { readOnly: true } }}
                   />
                   <Tooltip title="Copy link">
-                    <IconButton onClick={handleCopyLink} sx={{ color: 'gold' }}>
+                    <IconButton onClick={handleCopyLink} sx={{ color: '#2E7D32' }}>
                       <CopyIcon />
                     </IconButton>
                   </Tooltip>
@@ -363,16 +368,19 @@ export function CreateGamePage() {
             </Paper>
 
             <Paper
+              elevation={0}
               sx={{
                 p: 3,
                 flex: 1,
-                background: 'linear-gradient(180deg, rgba(255,215,0,0.05) 0%, rgba(20,27,45,0.95) 100%)',
-                border: '1px solid rgba(255,215,0,0.15)',
+                bgcolor: '#FFFFFF',
+                border: '2px solid #E8E0D4',
+                borderLeft: '4px solid #E65100',
+                borderRadius: 2,
               }}
             >
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: 'gold', mb: 2 }}
+                sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: '#2E7D32', mb: 2 }}
               >
                 Waiting Lobby ({gameState?.players.length ?? 0}/{maxPlayers})
               </Typography>
@@ -384,9 +392,9 @@ export function CreateGamePage() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     py: 4,
-                    border: '1px dashed rgba(255,215,0,0.2)',
+                    border: '2px dashed #E8E0D4',
                     borderRadius: 2,
-                    background: 'rgba(255,215,0,0.03)',
+                    bgcolor: '#FAFAF5',
                   }}
                 >
                   <WaitingAnimation message="Waiting for players to join" />
@@ -397,36 +405,27 @@ export function CreateGamePage() {
                 {gameState?.players.map((player, idx) => (
                   <Card
                     key={player.id}
+                    elevation={0}
                     sx={{
-                      background: 'rgba(20,27,45,0.9)',
-                      border: `1px solid ${player.color}33`,
+                      bgcolor: '#FFFFFF',
+                      border: `2px solid ${player.color}33`,
+                      borderLeft: `4px solid ${player.color}`,
                       position: 'relative',
                       overflow: 'visible',
                     }}
                   >
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 4,
-                        borderRadius: '8px 8px 0 0',
-                        background: `linear-gradient(90deg, ${player.color}, ${DISTRICT_STRIPS[idx % DISTRICT_STRIPS.length]})`,
-                      }}
-                    />
                     <CardContent sx={{ py: 1.5, '&:last-child': { pb: 1.5 }, pt: 2 }}>
                       <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
                         <Avatar sx={{ bgcolor: player.color, width: 36, height: 36 }}>
                           {player.name.charAt(0).toUpperCase()}
                         </Avatar>
                         <Box sx={{ flex: 1 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
                             {player.name}
                           </Typography>
                           <Typography
                             variant="caption"
-                            color={player.isConnected ? 'success.main' : 'error.main'}
+                            sx={{ color: player.isConnected ? '#2E7D32' : '#C62828' }}
                           >
                             {player.isConnected ? 'Connected' : 'Offline'}
                           </Typography>
@@ -435,7 +434,7 @@ export function CreateGamePage() {
                           <IconButton
                             size="small"
                             onClick={() => handleRemovePlayer(player.id)}
-                            sx={{ color: 'error.main' }}
+                            sx={{ color: '#C62828' }}
                           >
                             <RemoveIcon fontSize="small" />
                           </IconButton>
@@ -448,26 +447,42 @@ export function CreateGamePage() {
             </Paper>
           </Stack>
 
-          <Button
-            variant="contained"
-            size="large"
-            fullWidth
-            startIcon={<StartIcon />}
-            onClick={handleStartGame}
-            disabled={!gameState || gameState.players.length === 0}
-            sx={{
-              py: 2,
-              fontFamily: 'Bungee, cursive',
-              background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 100%)',
-              color: '#0a0e1a',
-              fontWeight: 700,
-              '&:hover': {
-                background: 'linear-gradient(135deg, #FFE54C 0%, #FFB300 100%)',
-              },
-            }}
-          >
-            Start Game ({gameState?.players.length ?? 0} players)
-          </Button>
+          <Stack spacing={0.5} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={0.5} sx={{ justifyContent: 'center', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+              {DISTRICT_STRIPS.map((color, i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    width: 32,
+                    height: 6,
+                    borderRadius: 3,
+                    bgcolor: color,
+                    opacity: 0.7,
+                  }}
+                />
+              ))}
+            </Stack>
+            <Button
+              variant="contained"
+              size="large"
+              fullWidth
+              startIcon={<StartIcon />}
+              onClick={handleStartGame}
+              disabled={!gameState || gameState.players.length === 0}
+              sx={{
+                py: 2,
+                fontFamily: 'Bungee, cursive',
+                bgcolor: '#2E7D32',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                '&:hover': {
+                  bgcolor: '#1B5E20',
+                },
+              }}
+            >
+              Start Game ({gameState?.players.length ?? 0} players)
+            </Button>
+          </Stack>
         </Stack>
       </Container>
 

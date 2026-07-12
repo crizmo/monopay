@@ -10,7 +10,6 @@ import {
   Tooltip,
 } from '@mui/material';
 import {
-  Apartment as BuildingIcon,
   Remove as RemoveIcon,
   SwapHoriz as TransferIcon,
 } from '@mui/icons-material';
@@ -36,17 +35,11 @@ export function PlayerCard({ player, isHost, onRemove, onTransfer, showActions =
         position: 'relative',
         overflow: 'visible',
         opacity: player.isConnected ? 1 : 0.6,
-        borderLeft: `4px solid ${player.color}`,
-        bgcolor: '#0e1630',
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          top: 8,
-          right: 8,
-          opacity: 0.04,
-          fontSize: 48,
-          color: player.color,
-        },
+        bgcolor: '#FFFFFF',
+        border: '1px solid #E0E0E0',
+        borderLeft: `5px solid ${player.color}`,
+        borderRadius: 2,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -58,7 +51,7 @@ export function PlayerCard({ player, isHost, onRemove, onTransfer, showActions =
               bgcolor: player.color,
               fontSize: '1.5rem',
               fontWeight: 700,
-              boxShadow: `0 0 20px ${player.color}60, 0 4px 14px ${player.color}40`,
+              boxShadow: `0 2px 8px ${player.color}40`,
             }}
           >
             {player.name.charAt(0).toUpperCase()}
@@ -69,13 +62,29 @@ export function PlayerCard({ player, isHost, onRemove, onTransfer, showActions =
               <Typography variant="h6" sx={{ fontWeight: 600 }} noWrap>
                 {player.name}
               </Typography>
-              {!player.isConnected && (
+              {player.isConnected ? (
+                <Chip
+                  label="Online"
+                  size="small"
+                  sx={{
+                    height: 22,
+                    fontSize: '0.7rem',
+                    bgcolor: '#E8F5E9',
+                    color: '#2E7D32',
+                    fontWeight: 600,
+                  }}
+                />
+              ) : (
                 <Chip
                   label="Offline"
                   size="small"
-                  color="error"
-                  variant="outlined"
-                  sx={{ height: 22, fontSize: '0.7rem' }}
+                  sx={{
+                    height: 22,
+                    fontSize: '0.7rem',
+                    bgcolor: '#FFEBEE',
+                    color: '#C62828',
+                    fontWeight: 600,
+                  }}
                 />
               )}
             </Stack>
@@ -83,10 +92,7 @@ export function PlayerCard({ player, isHost, onRemove, onTransfer, showActions =
               variant="h5"
               sx={{
                 fontWeight: 800,
-                background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#2E7D32',
                 fontFamily: '"Bungee", cursive',
               }}
             >
@@ -100,7 +106,7 @@ export function PlayerCard({ player, isHost, onRemove, onTransfer, showActions =
                 <IconButton
                   size="small"
                   onClick={() => onTransfer?.(player.id)}
-                  sx={{ color: 'primary.main' }}
+                  sx={{ color: '#2E7D32' }}
                 >
                   <TransferIcon fontSize="small" />
                 </IconButton>
@@ -109,7 +115,7 @@ export function PlayerCard({ player, isHost, onRemove, onTransfer, showActions =
                 <IconButton
                   size="small"
                   onClick={() => onRemove?.(player.id)}
-                  sx={{ color: 'error.main' }}
+                  sx={{ color: '#C62828' }}
                 >
                   <RemoveIcon fontSize="small" />
                 </IconButton>

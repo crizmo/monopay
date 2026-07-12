@@ -18,24 +18,24 @@ interface LayoutProps {
   actions?: ReactNode;
 }
 
-export function Layout({ children, title = 'Monopay', actions }: LayoutProps) {
+export function Layout({ children, title = 'MONOPAY', actions }: LayoutProps) {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#0B1026' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F5F0E8' }}>
       <AppBar
         position="static"
         elevation={0}
         sx={{
-          bgcolor: '#0e1630',
-          borderBottom: '1px solid rgba(255, 215, 0, 0.08)',
+          bgcolor: '#FFFFFF',
+          borderBottom: '1px solid #E0E0E0',
         }}
       >
         <Toolbar>
           <IconButton
             edge="start"
             onClick={() => navigate('/')}
-            sx={{ mr: 2, color: 'secondary.main' }}
+            sx={{ mr: 2, color: '#2E7D32' }}
           >
             <LogoIcon sx={{ fontSize: 32 }} />
           </IconButton>
@@ -44,10 +44,7 @@ export function Layout({ children, title = 'Monopay', actions }: LayoutProps) {
             sx={{
               fontWeight: 700,
               fontFamily: '"Bungee", cursive',
-              background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: '#2E7D32',
               letterSpacing: '0.05em',
               flex: 1,
             }}
@@ -61,8 +58,8 @@ export function Layout({ children, title = 'Monopay', actions }: LayoutProps) {
         </Toolbar>
         <Box
           sx={{
-            height: 3,
-            background: 'linear-gradient(90deg, #1A237E, #1B5E20, #01579B, #4A148C, #BF360C, #B71C1C, #F57F17, #3E2723)',
+            height: 4,
+            background: 'linear-gradient(90deg, #1565C0, #2E7D32, #0288D1, #7B1FA2, #E65100, #C62828, #F9A825, #5D4037)',
           }}
         />
       </AppBar>

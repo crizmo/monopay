@@ -24,8 +24,6 @@ import { DISTRICT_STRIPS } from '../types';
 import { savePreferences, loadPreferences } from '../services/StorageService';
 import { formatMoney } from '../utils/format';
 
-type Room = ReturnType<typeof joinRoom>;
-
 export function JoinGamePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -42,8 +40,10 @@ export function JoinGamePage() {
     severity: 'error' as 'error' | 'success',
   });
 
-  const roomRef = useRef<Room | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const roomRef = useRef<any>(null);
   const gameStateRef = useRef<GameState | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleJoin = () => {
     if (!roomCode.trim() || !playerName.trim()) return;
@@ -58,6 +58,7 @@ export function JoinGamePage() {
     const joinRequest = room.makeAction('join-request');
     const rejectJoin = room.makeAction('reject-join');
 
+    // Listen for state updates from host (after we've been accepted)
     stateUpdate.onMessage = (rawData) => {
       const data = rawData as unknown as GameState;
       gameStateRef.current = data;
@@ -65,11 +66,12 @@ export function JoinGamePage() {
       setJoining(false);
       setWaiting(true);
 
+      // Find ourselves in the player list
       const myPlayer = data.players.find((p) => p.peerId === selfId);
       if (myPlayer) {
         localStorage.setItem('monopay_current_player', JSON.stringify(myPlayer));
-        localStorage.setItem('monopay_game_state', JSON.stringify(data));
       }
+      localStorage.setItem('monopay_game_state', JSON.stringify(data));
     };
 
     rejectJoin.onMessage = (rawData) => {
@@ -80,7 +82,7 @@ export function JoinGamePage() {
       roomRef.current = null;
     };
 
-    room.onPeerLeave = (peerId) => {
+    room.onPeerLeave = (peerId: string) => {
       if (gameStateRef.current) {
         setGameState((prev) => {
           if (!prev) return prev;
@@ -91,16 +93,39 @@ export function JoinGamePage() {
             ),
           };
           gameStateRef.current = updated;
+          localStorage.setItem('monopay_game_state', JSON.stringify(updated));
           return updated;
         });
       }
     };
 
-    joinRequest.send({ playerName: playerName.trim() });
+    // KEY FIX: Wait for the host to be discovered before sending join request
+    room.onPeerJoin = (peerId: string) => {
+      // Clear the timeout since we connected
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      // Send join request to the host now that the peer channel is open
+      joinRequest.send({ playerName: playerName.trim() });
+    };
+
+    // Timeout if no peer connects within 15 seconds
+    timeoutRef.current = setTimeout(() => {
+      setJoining(false);
+      setSnackbar({
+        open: true,
+        message: 'Could not find the host. Check the room code and try again.',
+        severity: 'error',
+      });
+      room.leave();
+      roomRef.current = null;
+    }, 15_000);
   };
 
   useEffect(() => {
     return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       roomRef.current?.leave();
       roomRef.current = null;
     };
@@ -124,7 +149,7 @@ export function JoinGamePage() {
             <Box sx={{ textAlign: 'center' }}>
               <Typography
                 variant="h5"
-                sx={{ fontFamily: '"Bungee", cursive', color: '#0D1B3E', mb: 0.5 }}
+                sx={{ fontFamily: '"Bungee", cursive', color: '#2E7D32', mb: 0.5 }}
               >
                 You're in the lobby!
               </Typography>
@@ -134,22 +159,24 @@ export function JoinGamePage() {
             </Box>
 
             <Paper
+              elevation={0}
               sx={{
                 p: 3,
                 width: '100%',
+                bgcolor: '#FFFFFF',
+                border: '2px solid #E8E0D4',
                 borderLeft: `4px solid ${accentColor}`,
-                background: 'linear-gradient(135deg, #F8F9FF 0%, #FFFFFF 100%)',
               }}
             >
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
                 <Apartment sx={{ color: accentColor }} />
                 <Typography variant="body2" color="text.secondary">
-                  {gameState.roomName} — <Box component="span" sx={{ fontFamily: 'monospace', letterSpacing: '0.15em', fontWeight: 700 }}>{gameState.roomId}</Box>
+                  {gameState.roomName} — <Box component="span" sx={{ fontFamily: 'monospace', letterSpacing: '0.15em', fontWeight: 700, color: '#333' }}>{gameState.roomId}</Box>
                 </Typography>
                 <Chip
                   label={formatMoney(gameState.startingBalance)}
                   size="small"
-                  sx={{ ml: 'auto', fontWeight: 700, bgcolor: '#C5CAE9', color: '#0D1B3E' }}
+                  sx={{ ml: 'auto', fontWeight: 700, bgcolor: '#E8F5E9', color: '#2E7D32' }}
                 />
               </Stack>
               <WaitingAnimation message="Waiting for host to start the game" />
@@ -162,7 +189,9 @@ export function JoinGamePage() {
               {gameState.players.map((player, idx) => (
                 <Card
                   key={player.id}
+                  elevation={0}
                   sx={{
+                    border: '1px solid #E8E0D4',
                     borderLeft: `4px solid ${player.color}`,
                     transition: 'transform 0.15s',
                     '&:hover': { transform: 'translateX(4px)' },
@@ -182,10 +211,10 @@ export function JoinGamePage() {
                         {player.name.charAt(0).toUpperCase()}
                       </Avatar>
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
                           {player.name}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600 }}>
                           {formatMoney(player.balance)}
                         </Typography>
                       </Box>
@@ -213,151 +242,132 @@ export function JoinGamePage() {
   return (
     <Layout title="Join Game">
       <Container maxWidth="sm">
-        <Box
-          sx={{
-            position: 'relative',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: -40,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 200,
-              height: 80,
-              background: 'linear-gradient(180deg, transparent 0%, rgba(13,27,62,0.04) 100%)',
-              borderRadius: '0 0 40px 40px',
-              pointerEvents: 'none',
-            },
-          }}
-        >
-          <Stack spacing={4}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontFamily: '"Bungee", cursive',
-                  color: '#0D1B3E',
-                  mb: 0.5,
-                }}
-              >
-                Join a City
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Enter the room code to join an existing game
-              </Typography>
-            </Box>
+        <Stack spacing={4}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: '"Bungee", cursive',
+                color: '#2E7D32',
+                mb: 0.5,
+              }}
+            >
+              Join a City
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Enter the room code to join an existing game
+            </Typography>
+          </Box>
 
-            <Stack spacing={3}>
-              <TextField
-                label="Room Code"
-                value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                fullWidth
-                placeholder="Enter 6-character room code"
-                slotProps={{
-                  htmlInput: {
-                    maxLength: 6,
-                    style: {
-                      textTransform: 'uppercase',
-                      fontFamily: 'monospace',
-                      fontSize: '1.4rem',
-                      letterSpacing: '0.25em',
-                      textAlign: 'center',
-                    },
+          <Stack spacing={3}>
+            <TextField
+              label="Room Code"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
+              fullWidth
+              placeholder="Enter 6-character room code"
+              slotProps={{
+                htmlInput: {
+                  maxLength: 6,
+                  style: {
+                    textTransform: 'uppercase',
+                    fontFamily: 'monospace',
+                    fontSize: '1.4rem',
+                    letterSpacing: '0.25em',
+                    textAlign: 'center',
                   },
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: '#C5CAE9' },
-                    '&:hover fieldset': { borderColor: '#3F51B5' },
-                    '&.Mui-focused fieldset': { borderColor: '#1A237E', borderWidth: 2 },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#1A237E' },
-                }}
-              />
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#E8E0D4' },
+                  '&:hover fieldset': { borderColor: '#2E7D32' },
+                  '&.Mui-focused fieldset': { borderColor: '#2E7D32', borderWidth: 2 },
+                },
+                '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+              }}
+            />
 
-              <TextField
-                label="Your Name"
-                value={playerName}
-                onChange={(e) => setPlayerName(e.target.value)}
-                fullWidth
-                placeholder="Enter your player name"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: '#C5CAE9' },
-                    '&:hover fieldset': { borderColor: '#3F51B5' },
-                    '&.Mui-focused fieldset': { borderColor: '#1A237E', borderWidth: 2 },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#1A237E' },
-                }}
-              />
+            <TextField
+              label="Your Name"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              fullWidth
+              placeholder="Enter your player name"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#E8E0D4' },
+                  '&:hover fieldset': { borderColor: '#2E7D32' },
+                  '&.Mui-focused fieldset': { borderColor: '#2E7D32', borderWidth: 2 },
+                },
+                '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+              }}
+            />
 
-              <Button
-                variant="contained"
-                size="large"
-                fullWidth
-                startIcon={<JoinIcon />}
-                onClick={handleJoin}
-                disabled={!roomCode.trim() || !playerName.trim() || joining}
-                sx={{
-                  py: 1.5,
-                  fontFamily: '"Bungee", cursive',
-                  fontSize: '1rem',
-                  background: 'linear-gradient(135deg, #1A237E 0%, #0D1B3E 100%)',
-                  boxShadow: '0 4px 20px rgba(26,35,126,0.3)',
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #283593 0%, #1A237E 100%)',
-                    boxShadow: '0 6px 24px rgba(26,35,126,0.4)',
-                  },
-                  '&:disabled': {
-                    background: '#E8EAF6',
-                    boxShadow: 'none',
-                  },
-                }}
-              >
-                {joining ? (
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                    <Box
-                      sx={{
-                        width: 16,
-                        height: 16,
-                        border: '2px solid rgba(255,255,255,0.3)',
-                        borderTopColor: '#FFD54F',
-                        borderRadius: '50%',
-                        animation: 'spin 0.8s linear infinite',
-                        '@keyframes spin': {
-                          to: { transform: 'rotate(360deg)' },
-                        },
-                      }}
-                    />
-                    <span>Connecting to City...</span>
-                  </Stack>
-                ) : (
-                  'Join Game'
-                )}
-              </Button>
-            </Stack>
-
-            <Box sx={{ textAlign: 'center', pt: 1 }}>
-              <Stack direction="row" spacing={0.5} sx={{ justifyContent: 'center', flexWrap: 'wrap', gap: 0.5 }}>
-                {DISTRICT_STRIPS.map((color, i) => (
+            <Button
+              variant="contained"
+              size="large"
+              fullWidth
+              startIcon={<JoinIcon />}
+              onClick={handleJoin}
+              disabled={!roomCode.trim() || !playerName.trim() || joining}
+              sx={{
+                py: 1.5,
+                fontFamily: '"Bungee", cursive',
+                fontSize: '1rem',
+                bgcolor: '#2E7D32',
+                color: '#FFFFFF',
+                boxShadow: '0 4px 16px rgba(46, 125, 50, 0.3)',
+                '&:hover': {
+                  bgcolor: '#1B5E20',
+                  boxShadow: '0 6px 20px rgba(46, 125, 50, 0.4)',
+                },
+                '&:disabled': {
+                  bgcolor: '#E8E0D4',
+                  boxShadow: 'none',
+                },
+              }}
+            >
+              {joining ? (
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <Box
-                    key={i}
                     sx={{
-                      width: 32,
-                      height: 6,
-                      borderRadius: 3,
-                      bgcolor: color,
-                      opacity: 0.7,
-                      transition: 'opacity 0.2s',
-                      '&:hover': { opacity: 1 },
+                      width: 16,
+                      height: 16,
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      borderTopColor: '#FFFFFF',
+                      borderRadius: '50%',
+                      animation: 'spin 0.8s linear infinite',
+                      '@keyframes spin': {
+                        to: { transform: 'rotate(360deg)' },
+                      },
                     }}
                   />
-                ))}
-              </Stack>
-            </Box>
+                  <span>Connecting to City...</span>
+                </Stack>
+              ) : (
+                'Join Game'
+              )}
+            </Button>
           </Stack>
-        </Box>
+
+          <Stack direction="row" spacing={0.5} sx={{ justifyContent: 'center', flexWrap: 'wrap', gap: 0.5 }}>
+            {DISTRICT_STRIPS.map((color, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 32,
+                  height: 6,
+                  borderRadius: 3,
+                  bgcolor: color,
+                  opacity: 0.7,
+                  transition: 'opacity 0.2s',
+                  '&:hover': { opacity: 1 },
+                }}
+              />
+            ))}
+          </Stack>
+        </Stack>
       </Container>
 
       <Snackbar

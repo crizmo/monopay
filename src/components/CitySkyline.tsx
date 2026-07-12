@@ -5,7 +5,7 @@ interface CitySkylineProps {
   opacity?: number;
 }
 
-export function CitySkyline({ height = 200, opacity = 0.3 }: CitySkylineProps) {
+export function CitySkyline({ height = 220, opacity = 0.5 }: CitySkylineProps) {
   return (
     <Box
       sx={{
@@ -17,144 +17,122 @@ export function CitySkyline({ height = 200, opacity = 0.3 }: CitySkylineProps) {
       }}
     >
       <svg
-        viewBox="0 0 1200 200"
+        viewBox="0 0 1200 220"
         preserveAspectRatio="xMidYMax slice"
         style={{ width: '100%', height: '100%' }}
       >
         <defs>
-          <linearGradient id="skyGlow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1A237E" stopOpacity="0" />
-            <stop offset="100%" stopColor="#FFD700" stopOpacity="0.1" />
+          <linearGradient id="skyGlowLight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#E3F2FD" stopOpacity="0" />
+            <stop offset="100%" stopColor="#BBDEFB" stopOpacity="0.3" />
+          </linearGradient>
+          <linearGradient id="buildingGrad1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#78909C" />
+            <stop offset="100%" stopColor="#546E7A" />
+          </linearGradient>
+          <linearGradient id="buildingGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#90A4AE" />
+            <stop offset="100%" stopColor="#607D8B" />
           </linearGradient>
         </defs>
 
-        <rect width="1200" height="200" fill="url(#skyGlow)" />
+        <rect width="1200" height="220" fill="url(#skyGlowLight)" />
 
         {/* Background buildings */}
-        <g fill="#0D1B2A">
-          <rect x="50" y="120" width="40" height="80" rx="2" />
-          <rect x="100" y="90" width="35" height="110" rx="2" />
-          <rect x="145" y="100" width="50" height="100" rx="2" />
-          <rect x="210" y="70" width="30" height="130" rx="2" />
-          <rect x="250" y="85" width="45" height="115" rx="2" />
-          <rect x="310" y="60" width="35" height="140" rx="2" />
-          <rect x="355" y="75" width="40" height="125" rx="2" />
-          <rect x="410" y="50" width="50" height="150" rx="2" />
-          <rect x="470" y="65" width="35" height="135" rx="2" />
-          <rect x="520" y="40" width="45" height="160" rx="2" />
-          <rect x="575" y="55" width="40" height="145" rx="2" />
-          <rect x="630" y="35" width="50" height="165" rx="2" />
-          <rect x="690" y="50" width="35" height="150" rx="2" />
-          <rect x="735" y="30" width="45" height="170" rx="2" />
-          <rect x="790" y="45" width="40" height="155" rx="2" />
-          <rect x="845" y="55" width="50" height="145" rx="2" />
-          <rect x="910" y="70" width="35" height="130" rx="2" />
-          <rect x="955" y="80" width="45" height="120" rx="2" />
-          <rect x="1010" y="90" width="40" height="110" rx="2" />
-          <rect x="1060" y="100" width="50" height="100" rx="2" />
-          <rect x="1120" y="110" width="35" height="90" rx="2" />
-        </g>
-
-        {/* Monopoly Tower (center, taller, golden windows) */}
         <g>
-          <rect x="580" y="10" width="40" height="190" rx="3" fill="#0D1B2A" />
-          <rect x="575" y="5" width="50" height="15" rx="2" fill="#FFD700" opacity="0.6" />
-          {/* Golden windows */}
-          <rect x="585" y="25" width="6" height="6" fill="#FFD700" opacity="0.8" />
-          <rect x="595" y="25" width="6" height="6" fill="#FFD700" opacity="0.6" />
-          <rect x="605" y="25" width="6" height="6" fill="#FFD700" opacity="0.9" />
-          <rect x="585" y="40" width="6" height="6" fill="#FFD700" opacity="0.7" />
-          <rect x="595" y="40" width="6" height="6" fill="#FFD700" opacity="0.5" />
-          <rect x="605" y="40" width="6" height="6" fill="#FFD700" opacity="0.8" />
-          <rect x="585" y="55" width="6" height="6" fill="#FFD700" opacity="0.9" />
-          <rect x="595" y="55" width="6" height="6" fill="#FFD700" opacity="0.6" />
-          <rect x="605" y="55" width="6" height="6" fill="#FFD700" opacity="0.7" />
-          <rect x="585" y="70" width="6" height="6" fill="#FFD700" opacity="0.5" />
-          <rect x="595" y="70" width="6" height="6" fill="#FFD700" opacity="0.8" />
-          <rect x="605" y="70" width="6" height="6" fill="#FFD700" opacity="0.6" />
-          <rect x="585" y="85" width="6" height="6" fill="#FFD700" opacity="0.7" />
-          <rect x="595" y="85" width="6" height="6" fill="#FFD700" opacity="0.9" />
-          <rect x="605" y="85" width="6" height="6" fill="#FFD700" opacity="0.5" />
-          {/* "M" on tower */}
-          <text x="600" y="100" textAnchor="middle" fill="#FFD700" fontSize="14" fontWeight="bold" fontFamily="serif" opacity="0.8">M</text>
+          <rect x="30" y="140" width="45" height="80" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="85" y="100" width="38" height="120" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="133" y="115" width="52" height="105" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="195" y="80" width="34" height="140" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="240" y="95" width="48" height="125" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="300" y="65" width="38" height="155" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="348" y="82" width="44" height="138" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="405" y="50" width="52" height="170" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="468" y="70" width="38" height="150" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="518" y="40" width="48" height="180" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="578" y="58" width="42" height="162" rx="3" fill="url(#buildingGrad2)" />
+
+          {/* Monopoly Tower - center, tallest, with gold top */}
+          <rect x="630" y="15" width="44" height="205" rx="4" fill="#455A64" />
+          <rect x="625" y="8" width="54" height="18" rx="4" fill="#F9A825" />
+          <text x="652" y="22" textAnchor="middle" fill="#FFFFFF" fontSize="13" fontWeight="bold" fontFamily="serif">M</text>
+
+          <rect x="688" y="50" width="38" height="170" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="736" y="35" width="50" height="185" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="796" y="52" width="42" height="168" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="848" y="62" width="52" height="158" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="912" y="78" width="38" height="142" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="960" y="90" width="48" height="130" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="1018" y="100" width="42" height="120" rx="3" fill="url(#buildingGrad1)" />
+          <rect x="1070" y="112" width="52" height="108" rx="3" fill="url(#buildingGrad2)" />
+          <rect x="1132" y="125" width="38" height="95" rx="3" fill="url(#buildingGrad1)" />
         </g>
 
         {/* Windows on buildings */}
-        <g fill="#FFD700" opacity="0.3">
-          <rect x="55" y="130" width="4" height="4" />
-          <rect x="65" y="130" width="4" height="4" />
-          <rect x="75" y="130" width="4" height="4" />
-          <rect x="55" y="145" width="4" height="4" />
-          <rect x="65" y="145" width="4" height="4" />
-          <rect x="75" y="145" width="4" height="4" />
-          <rect x="55" y="160" width="4" height="4" />
-          <rect x="65" y="160" width="4" height="4" />
-          <rect x="75" y="160" width="4" height="4" />
+        <g fill="#FFD54F" opacity="0.7">
+          {/* Tower windows */}
+          <rect x="638" y="35" width="5" height="5" rx="1" />
+          <rect x="650" y="35" width="5" height="5" rx="1" />
+          <rect x="662" y="35" width="5" height="5" rx="1" />
+          <rect x="638" y="50" width="5" height="5" rx="1" />
+          <rect x="650" y="50" width="5" height="5" rx="1" />
+          <rect x="662" y="50" width="5" height="5" rx="1" />
+          <rect x="638" y="65" width="5" height="5" rx="1" />
+          <rect x="650" y="65" width="5" height="5" rx="1" />
+          <rect x="662" y="65" width="5" height="5" rx="1" />
+          <rect x="638" y="80" width="5" height="5" rx="1" />
+          <rect x="650" y="80" width="5" height="5" rx="1" />
+          <rect x="662" y="80" width="5" height="5" rx="1" />
+          <rect x="638" y="95" width="5" height="5" rx="1" />
+          <rect x="650" y="95" width="5" height="5" rx="1" />
+          <rect x="662" y="95" width="5" height="5" rx="1" />
 
-          <rect x="105" y="100" width="4" height="4" />
-          <rect x="115" y="100" width="4" height="4" />
-          <rect x="125" y="100" width="4" height="4" />
-          <rect x="105" y="115" width="4" height="4" />
-          <rect x="115" y="115" width="4" height="4" />
-          <rect x="125" y="115" width="4" height="4" />
-          <rect x="105" y="130" width="4" height="4" />
-          <rect x="115" y="130" width="4" height="4" />
-          <rect x="125" y="130" width="4" height="4" />
+          {/* Building windows left */}
+          <rect x="415" y="65" width="4" height="4" rx="1" />
+          <rect x="430" y="65" width="4" height="4" rx="1" />
+          <rect x="440" y="65" width="4" height="4" rx="1" />
+          <rect x="415" y="80" width="4" height="4" rx="1" />
+          <rect x="430" y="80" width="4" height="4" rx="1" />
+          <rect x="440" y="80" width="4" height="4" rx="1" />
+          <rect x="415" y="95" width="4" height="4" rx="1" />
+          <rect x="430" y="95" width="4" height="4" rx="1" />
+          <rect x="440" y="95" width="4" height="4" rx="1" />
 
-          <rect x="420" y="60" width="5" height="5" />
-          <rect x="435" y="60" width="5" height="5" />
-          <rect x="445" y="60" width="5" height="5" />
-          <rect x="420" y="78" width="5" height="5" />
-          <rect x="435" y="78" width="5" height="5" />
-          <rect x="445" y="78" width="5" height="5" />
-          <rect x="420" y="96" width="5" height="5" />
-          <rect x="435" y="96" width="5" height="5" />
-          <rect x="445" y="96" width="5" height="5" />
-          <rect x="420" y="114" width="5" height="5" />
-          <rect x="435" y="114" width="5" height="5" />
-          <rect x="445" y="114" width="5" height="5" />
+          <rect x="528" y="55" width="4" height="4" rx="1" />
+          <rect x="543" y="55" width="4" height="4" rx="1" />
+          <rect x="528" y="70" width="4" height="4" rx="1" />
+          <rect x="543" y="70" width="4" height="4" rx="1" />
+          <rect x="528" y="85" width="4" height="4" rx="1" />
+          <rect x="543" y="85" width="4" height="4" rx="1" />
 
-          <rect x="530" y="50" width="5" height="5" />
-          <rect x="545" y="50" width="5" height="5" />
-          <rect x="530" y="68" width="5" height="5" />
-          <rect x="545" y="68" width="5" height="5" />
-          <rect x="530" y="86" width="5" height="5" />
-          <rect x="545" y="86" width="5" height="5" />
-          <rect x="530" y="104" width="5" height="5" />
-          <rect x="545" y="104" width="5" height="5" />
+          {/* Building windows right */}
+          <rect x="746" y="50" width="4" height="4" rx="1" />
+          <rect x="762" y="50" width="4" height="4" rx="1" />
+          <rect x="774" y="50" width="4" height="4" rx="1" />
+          <rect x="746" y="65" width="4" height="4" rx="1" />
+          <rect x="762" y="65" width="4" height="4" rx="1" />
+          <rect x="774" y="65" width="4" height="4" rx="1" />
+          <rect x="746" y="80" width="4" height="4" rx="1" />
+          <rect x="762" y="80" width="4" height="4" rx="1" />
+          <rect x="774" y="80" width="4" height="4" rx="1" />
 
-          <rect x="640" y="45" width="5" height="5" />
-          <rect x="655" y="45" width="5" height="5" />
-          <rect x="665" y="45" width="5" height="5" />
-          <rect x="640" y="63" width="5" height="5" />
-          <rect x="655" y="63" width="5" height="5" />
-          <rect x="665" y="63" width="5" height="5" />
-          <rect x="640" y="81" width="5" height="5" />
-          <rect x="655" y="81" width="5" height="5" />
-          <rect x="665" y="81" width="5" height="5" />
-          <rect x="640" y="99" width="5" height="5" />
-          <rect x="655" y="99" width="5" height="5" />
-          <rect x="665" y="99" width="5" height="5" />
-
-          <rect x="745" y="40" width="5" height="5" />
-          <rect x="760" y="40" width="5" height="5" />
-          <rect x="745" y="58" width="5" height="5" />
-          <rect x="760" y="58" width="5" height="5" />
-          <rect x="745" y="76" width="5" height="5" />
-          <rect x="760" y="76" width="5" height="5" />
-          <rect x="745" y="94" width="5" height="5" />
-          <rect x="760" y="94" width="5" height="5" />
+          <rect x="858" y="75" width="4" height="4" rx="1" />
+          <rect x="874" y="75" width="4" height="4" rx="1" />
+          <rect x="888" y="75" width="4" height="4" rx="1" />
+          <rect x="858" y="90" width="4" height="4" rx="1" />
+          <rect x="874" y="90" width="4" height="4" rx="1" />
+          <rect x="888" y="90" width="4" height="4" rx="1" />
         </g>
 
-        {/* Property color strips at bottom */}
-        <rect x="0" y="196" width="150" height="4" fill="#1A237E" />
-        <rect x="150" y="196" width="150" height="4" fill="#1B5E20" />
-        <rect x="300" y="196" width="150" height="4" fill="#01579B" />
-        <rect x="450" y="196" width="150" height="4" fill="#4A148C" />
-        <rect x="600" y="196" width="150" height="4" fill="#BF360C" />
-        <rect x="750" y="196" width="150" height="4" fill="#B71C1C" />
-        <rect x="900" y="196" width="150" height="4" fill="#F57F17" />
-        <rect x="1050" y="196" width="150" height="4" fill="#3E2723" />
+        {/* Property color strip at the bottom - like a Monopoly board edge */}
+        <rect x="0" y="215" width="150" height="5" fill="#1565C0" />
+        <rect x="150" y="215" width="150" height="5" fill="#2E7D32" />
+        <rect x="300" y="215" width="150" height="5" fill="#0288D1" />
+        <rect x="450" y="215" width="150" height="5" fill="#7B1FA2" />
+        <rect x="600" y="215" width="150" height="5" fill="#E65100" />
+        <rect x="750" y="215" width="150" height="5" fill="#C62828" />
+        <rect x="900" y="215" width="150" height="5" fill="#F9A825" />
+        <rect x="1050" y="215" width="150" height="5" fill="#5D4037" />
       </svg>
     </Box>
   );

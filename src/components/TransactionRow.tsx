@@ -42,7 +42,8 @@ export function TransactionRow({ transaction, gameState }: TransactionRowProps) 
     (transaction.type === 'transfer' && transaction.playerId === transaction.receiverId);
 
   const icon = isCredit ? <CreditIcon /> : <DebitIcon />;
-  const color = isCredit ? 'success' : 'error';
+  const color = isCredit ? '#2E7D32' : '#C62828';
+  const bgColor = isCredit ? '#E8F5E9' : '#FFEBEE';
 
   const counterparty =
     transaction.type === 'transfer'
@@ -57,10 +58,12 @@ export function TransactionRow({ transaction, gameState }: TransactionRowProps) 
         py: 2,
         px: 2,
         borderRadius: 2,
-        borderLeft: `3px solid ${isCredit ? 'rgba(76, 175, 80, 0.5)' : 'rgba(244, 67, 54, 0.5)'}`,
+        bgcolor: '#FFFFFF',
+        border: '1px solid #E0E0E0',
+        borderLeft: `3px solid ${color}`,
         transition: 'background 0.2s',
         '&:hover': {
-          background: 'rgba(255, 215, 0, 0.03)',
+          bgcolor: '#FAFAFA',
         },
       }}
     >
@@ -73,8 +76,8 @@ export function TransactionRow({ transaction, gameState }: TransactionRowProps) 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            bgcolor: `${color}.main`,
-            color: `${color}.contrastText`,
+            bgcolor: bgColor,
+            color: color,
           }}
         >
           {transaction.type === 'transfer' ? <TransferIcon /> : icon}
@@ -84,7 +87,7 @@ export function TransactionRow({ transaction, gameState }: TransactionRowProps) 
           <Typography variant="body2" sx={{ fontWeight: 600 }}>
             {transaction.description}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{ color: '#9E9E9E' }}>
             {affectedPlayer?.name} {counterparty}
           </Typography>
         </Box>
@@ -94,13 +97,13 @@ export function TransactionRow({ transaction, gameState }: TransactionRowProps) 
             variant="body1"
             sx={{
               fontWeight: 700,
-              color: `${color}.main`,
+              color: color,
               fontFamily: '"Inter", monospace',
             }}
           >
             {isCredit ? '+' : '-'}{formatMoney(transaction.amount)}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{ color: '#BDBDBD' }}>
             {formatTimestamp(transaction.timestamp)}
           </Typography>
         </Box>

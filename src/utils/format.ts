@@ -13,15 +13,7 @@ export function formatMoney(amount: number): string {
 }
 
 export function formatCurrency(amount: number): string {
-  if (amount >= 1_000_000) {
-    const m = amount / 1_000_000;
-    return `$${m % 1 === 0 ? m.toLocaleString() : m.toFixed(1)}M`;
-  }
-  if (amount >= 1_000) {
-    const k = amount / 1_000;
-    return `$${k % 1 === 0 ? k.toLocaleString() : k.toFixed(1)}K`;
-  }
-  return `$${amount.toLocaleString()}`;
+  return formatMoney(amount);
 }
 
 export function formatFullCurrency(amount: number): string {

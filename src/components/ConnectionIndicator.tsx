@@ -27,10 +27,16 @@ export function ConnectionIndicator() {
       <Chip
         icon={isConnected ? <ConnectedIcon /> : <DisconnectedIcon />}
         label={isConnected ? 'Online' : 'Offline'}
-        color={isConnected ? 'success' : 'error'}
-        variant="outlined"
         size="small"
-        sx={{ fontWeight: 600 }}
+        sx={{
+          fontWeight: 600,
+          bgcolor: isConnected ? '#E8F5E9' : '#FFEBEE',
+          color: isConnected ? '#2E7D32' : '#C62828',
+          border: 'none',
+          '& .MuiChip-icon': {
+            color: isConnected ? '#2E7D32' : '#C62828',
+          },
+        }}
       />
     </Tooltip>
   );

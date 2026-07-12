@@ -1,43 +1,24 @@
 export const PROPERTY_COLORS = {
-  darkBlue: '#1A237E',
-  green: '#1B5E20',
-  lightBlue: '#01579B',
-  purple: '#4A148C',
-  orange: '#BF360C',
-  red: '#B71C1C',
-  yellow: '#F57F17',
-  brown: '#3E2723',
+  darkBlue: '#1565C0',
+  green: '#2E7D32',
+  lightBlue: '#0288D1',
+  purple: '#7B1FA2',
+  orange: '#E65100',
+  red: '#C62828',
+  yellow: '#F9A825',
+  brown: '#5D4037',
 } as const;
 
 export const CITY_SKYLINE = {
-  sky: '#0B1026',
-  skyGlow: '#1A237E',
-  buildings: '#0D1B2A',
-  windows: '#FFD700',
+  sky: '#E3F2FD',
+  skyGlow: '#BBDEFB',
+  buildings: '#546E7A',
+  buildingsDark: '#37474F',
+  windows: '#FFD54F',
   accent: '#FF6F00',
 } as const;
 
-export const DISTRICT_NAMES = [
-  'Mediterranean Ave',
-  'Baltic Ave',
-  'Oriental Ave',
-  'Vermont Ave',
-  'Connecticut Ave',
-  'St. Charles Place',
-  'States Ave',
-  'Virginia Ave',
-  'St. James Place',
-  'Tennessee Ave',
-  'New York Ave',
-  'Kentucky Ave',
-  'Indiana Ave',
-  'Illinois Ave',
-  'Atlantic Ave',
-  'Ventnor Ave',
-  'Marvin Gardens',
-  'Pacific Ave',
-  'North Carolina Ave',
-  'Pennsylvania Ave',
-  'Park Place',
-  'Boardwalk',
-];
+export const BOARD_GREEN = '#2E7D32';
+export const MONEY_GREEN = '#388E3C';
+export const BOARD_WHITE = '#FFFDE7';
+export const BOARD_CREAM = '#FFF8E1';

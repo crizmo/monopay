@@ -16,21 +16,18 @@ import {
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Add as AddIcon,
-  Remove as RemoveIcon,
   SwapHoriz as TransferIcon,
   History as HistoryIcon,
   Logout as ExitIcon,
-  PlayArrow as StartIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { PlayerCard } from '../components/PlayerCard';
 import { QuickActions } from '../components/QuickActions';
 import { TransferDialog } from '../components/TransferDialog';
-import { TransactionRow } from '../components/TransactionRow';
 import { AnimatedBalance } from '../components/AnimatedBalance';
 import type { GameState, Player } from '../types';
+import { DISTRICT_STRIPS } from '../types';
 import { formatMoney } from '../utils/format';
 
 export function BankerDashboardPage() {
@@ -67,7 +64,6 @@ export function BankerDashboardPage() {
   const saveState = (state: GameState) => {
     setGameState(state);
     localStorage.setItem('monopay_game_state', JSON.stringify(state));
-    // Broadcast to peers via localStorage event (for multi-tab)
     window.dispatchEvent(new StorageEvent('storage', { key: 'monopay_game_state' }));
   };
 
@@ -167,18 +163,18 @@ export function BankerDashboardPage() {
   if (!gameState) return null;
 
   const drawerContent = (
-    <Box sx={{ width: 300, p: 2 }}>
+    <Box sx={{ width: 300, p: 2, bgcolor: '#FAFAF5' }}>
       <Stack spacing={3}>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Bungee, cursive', color: '#2E7D32' }}>
           Quick Actions
         </Typography>
 
         {selectedPlayer && (
-          <Paper sx={{ p: 2 }}>
+          <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `2px solid ${selectedPlayer.color}33`, borderLeft: `4px solid ${selectedPlayer.color}` }}>
             <Typography variant="body2" color="text.secondary">
               Selected Player
             </Typography>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#333' }}>
               {selectedPlayer.name}
             </Typography>
             <AnimatedBalance balance={selectedPlayer.balance} size="small" />
@@ -186,7 +182,7 @@ export function BankerDashboardPage() {
         )}
 
         {!selectedPlayer && (
-          <Paper sx={{ p: 2 }}>
+          <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: '1px solid #E8E0D4' }}>
             <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
               Tap a player card to select them
             </Typography>
@@ -199,25 +195,33 @@ export function BankerDashboardPage() {
           onAction={handleQuickAction}
         />
 
-        <Divider />
+        <Divider sx={{ borderColor: '#E8E0D4' }} />
 
         <Button
-          variant="outlined"
+          variant="contained"
           startIcon={<TransferIcon />}
           fullWidth
           onClick={() => setTransferOpen(true)}
           disabled={gameState.players.length < 2}
-          sx={{ borderColor: 'rgba(255, 215, 0, 0.3)', color: 'secondary.main' }}
+          sx={{
+            bgcolor: '#1565C0',
+            color: '#FFFFFF',
+            '&:hover': { bgcolor: '#0D47A1' },
+          }}
         >
           Transfer Funds
         </Button>
 
         <Button
-          variant="outlined"
+          variant="contained"
           startIcon={<HistoryIcon />}
           fullWidth
           onClick={() => navigate('/transactions')}
-          sx={{ borderColor: 'rgba(255, 215, 0, 0.3)', color: 'secondary.main' }}
+          sx={{
+            bgcolor: '#E65100',
+            color: '#FFFFFF',
+            '&:hover': { bgcolor: '#BF360C' },
+          }}
         >
           Transaction History
         </Button>
@@ -228,6 +232,7 @@ export function BankerDashboardPage() {
           startIcon={<ExitIcon />}
           fullWidth
           onClick={handleExit}
+          sx={{ borderColor: '#C62828', color: '#C62828' }}
         >
           End Game
         </Button>
@@ -248,8 +253,9 @@ export function BankerDashboardPage() {
             right: 16,
             zIndex: 1000,
             borderRadius: 4,
-            background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 100%)',
-            color: '#0a0e1a',
+            bgcolor: '#2E7D32',
+            color: '#FFFFFF',
+            boxShadow: '0 4px 16px rgba(46, 125, 50, 0.3)',
           }}
         >
           Actions
@@ -263,8 +269,8 @@ export function BankerDashboardPage() {
         variant={isMobile ? 'temporary' : 'permanent'}
         sx={{
           '& .MuiDrawer-paper': {
-            bgcolor: 'background.paper',
-            borderLeft: isMobile ? 'none' : '1px solid rgba(255, 215, 0, 0.1)',
+            bgcolor: '#FAFAF5',
+            borderLeft: isMobile ? 'none' : '2px solid #E8E0D4',
           },
         }}
       >
@@ -279,12 +285,14 @@ export function BankerDashboardPage() {
       >
         <Stack spacing={3}>
           <Paper
+            elevation={0}
             sx={{
               p: 2,
               textAlign: 'center',
+              bgcolor: '#FFFFFF',
+              border: '2px solid #E8E0D4',
               borderTop: '3px solid',
-              borderImage: 'linear-gradient(90deg, #1A237E, #FFD700, #B71C1C) 1',
-              bgcolor: '#0e1630',
+              borderImage: 'linear-gradient(90deg, #1565C0, #2E7D32, #E65100, #C62828, #F9A825, #7B1FA2) 1',
             }}
           >
             <Typography variant="body2" color="text.secondary">
@@ -294,10 +302,7 @@ export function BankerDashboardPage() {
               variant="h4"
               sx={{
                 fontWeight: 700,
-                background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#2E7D32',
                 fontFamily: '"Bungee", cursive',
               }}
             >
@@ -314,8 +319,8 @@ export function BankerDashboardPage() {
                     cursor: 'pointer',
                     borderRadius: 3,
                     transition: 'all 0.2s',
-                    border: selectedPlayerId === player.id ? '2px solid' : '2px solid transparent',
-                    borderColor: selectedPlayerId === player.id ? 'secondary.main' : 'transparent',
+                    border: selectedPlayerId === player.id ? '2px solid #2E7D32' : '2px solid transparent',
+                    boxShadow: selectedPlayerId === player.id ? '0 0 0 1px #2E7D32' : 'none',
                     '&:hover': { transform: 'translateY(-2px)' },
                   }}
                 >
@@ -335,7 +340,7 @@ export function BankerDashboardPage() {
           </Grid>
 
           {gameState.players.length === 0 && (
-            <Paper sx={{ p: 4, textAlign: 'center' }}>
+            <Paper elevation={0} sx={{ p: 4, textAlign: 'center', bgcolor: '#FFFFFF', border: '2px solid #E8E0D4' }}>
               <Typography variant="h6" color="text.secondary">
                 No players connected yet
               </Typography>
