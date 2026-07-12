@@ -1,6 +1,22 @@
 import { joinRoom, selfId } from 'trystero';
 import type { GameState } from '../types';
 
+const TRACKERS = [
+  'wss://tracker.openwebtorrent.com',
+  'wss://tracker.webtorrent.dev',
+  'wss://tracker.files.fm:7073',
+];
+
+const RTC_CONFIG = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:stun3.l.google.com:19302' },
+    { urls: 'stun:stun4.l.google.com:19302' },
+  ],
+};
+
 type StateCallback = (state: GameState) => void;
 type PeerJoinCallback = (peerId: string) => void;
 type PeerLeaveCallback = (peerId: string) => void;
@@ -41,7 +57,10 @@ class RoomService {
     this._role = 'host';
     this._roomCode = roomCode;
 
-    this.room = joinRoom({ appId: 'com.monopay' }, roomCode);
+    this.room = joinRoom(
+      { appId: 'com.monopay', trackerUrls: TRACKERS, rtcConfig: RTC_CONFIG },
+      roomCode
+    );
     this.stateUpdate = this.room.makeAction('state-update');
     this.joinRequest = this.room.makeAction('join-request');
     this.rejectJoin = this.room.makeAction('reject-join');
@@ -65,7 +84,10 @@ class RoomService {
     this._role = 'client';
     this._roomCode = roomCode;
 
-    this.room = joinRoom({ appId: 'com.monopay' }, roomCode);
+    this.room = joinRoom(
+      { appId: 'com.monopay', trackerUrls: TRACKERS, rtcConfig: RTC_CONFIG },
+      roomCode
+    );
     this.stateUpdate = this.room.makeAction('state-update');
     this.joinRequest = this.room.makeAction('join-request');
     this.rejectJoin = this.room.makeAction('reject-join');

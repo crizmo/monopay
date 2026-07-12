@@ -111,41 +111,66 @@ export function JoinGamePage() {
 
   if (waiting && gameState) {
     return (
-      <Layout title={`Room: ${gameState.roomName}`}>
+      <Layout title={`Room: ${gameState.roomName}`} darkMode={true}>
         <Container maxWidth="sm">
           <Stack spacing={4} sx={{ alignItems: 'center' }}>
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h5" sx={{ fontFamily: '"Bungee", cursive', color: '#2E7D32', mb: 0.5 }}>
+              <Typography variant="h5" sx={{ fontFamily: '"Bungee", cursive', color: '#00E676', mb: 0.5, letterSpacing: '0.05em' }}>
                 You're in the lobby!
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Waiting for the host to start the city builder
+              <Typography variant="body2" sx={{ color: '#94A3B8' }}>
+                Waiting for the host to start the game
               </Typography>
             </Box>
-            <Paper elevation={0} sx={{ p: 3, width: '100%', bgcolor: '#FFFFFF', border: '2px solid #E8E0D4', borderLeft: `4px solid ${accentColor}` }}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
+            
+            <Paper
+              elevation={0}
+              sx={{
+                p: 4,
+                width: '100%',
+                bgcolor: 'rgba(30, 41, 59, 0.7)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                borderLeft: `4px solid ${accentColor}`,
+                borderRadius: 4,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                color: '#F8FAFC',
+              }}
+            >
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2.5 }}>
                 <Apartment sx={{ color: accentColor }} />
-                <Typography variant="body2" color="text.secondary">
-                  {gameState.roomName} — <Box component="span" sx={{ fontFamily: 'monospace', letterSpacing: '0.15em', fontWeight: 700, color: '#333' }}>{gameState.roomId}</Box>
+                <Typography variant="body2" sx={{ color: '#94A3B8', fontWeight: 600 }}>
+                  {gameState.roomName} — <Box component="span" sx={{ fontFamily: 'monospace', letterSpacing: '0.15em', fontWeight: 700, color: '#00B0FF' }}>{gameState.roomId}</Box>
                 </Typography>
-                <Chip label={formatMoney(gameState.startingBalance)} size="small" sx={{ ml: 'auto', fontWeight: 700, bgcolor: '#E8F5E9', color: '#2E7D32' }} />
+                <Chip label={formatMoney(gameState.startingBalance)} size="small" sx={{ ml: 'auto', fontWeight: 700, bgcolor: 'rgba(0, 230, 118, 0.1)', color: '#00E676', border: '1px solid rgba(0, 230, 118, 0.2)' }} />
               </Stack>
               <WaitingAnimation message="Waiting for host to start the game" />
             </Paper>
+
             <Stack spacing={1.5} sx={{ width: '100%' }}>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant="subtitle2" sx={{ color: '#94A3B8', fontWeight: 700, px: 0.5 }}>
                 Players in lobby ({gameState.players.length}):
               </Typography>
               {gameState.players.map((player, idx) => (
-                <Card key={player.id} elevation={0} sx={{ border: '1px solid #E8E0D4', borderLeft: `4px solid ${player.color}`, transition: 'transform 0.15s', '&:hover': { transform: 'translateX(4px)' } }}>
-                  <CardContent sx={{ py: 1, '&:last-child': { pb: 1 } }}>
+                <Card
+                  key={player.id}
+                  elevation={0}
+                  sx={{
+                    bgcolor: 'rgba(15, 23, 42, 0.4)',
+                    border: `1px solid ${player.color}30`,
+                    borderLeft: `4px solid ${player.color}`,
+                    borderRadius: 3,
+                    transition: 'transform 0.15s',
+                    '&:hover': { transform: 'translateX(4px)' }
+                  }}
+                >
+                  <CardContent sx={{ py: 1.5, '&:last-child': { pb: 1.5 } }}>
                     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-                      <Avatar sx={{ bgcolor: player.color, width: 36, height: 36, fontSize: '0.875rem', fontFamily: '"Bungee", cursive' }}>
+                      <Avatar sx={{ bgcolor: player.color, width: 36, height: 36, fontSize: '0.875rem', fontFamily: '"Bungee", cursive', color: '#fff' }}>
                         {player.name.charAt(0).toUpperCase()}
                       </Avatar>
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>{player.name}</Typography>
-                        <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600 }}>{formatMoney(player.balance)}</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 700, color: '#F8FAFC' }}>{player.name}</Typography>
+                        <Typography variant="caption" sx={{ color: '#00E676', fontWeight: 600 }}>{formatMoney(player.balance)}</Typography>
                       </Box>
                       <Chip label={`#${idx + 1}`} size="small" sx={{ bgcolor: player.color, color: '#fff', fontWeight: 700, fontSize: '0.7rem' }} />
                     </Stack>
@@ -160,54 +185,108 @@ export function JoinGamePage() {
   }
 
   return (
-    <Layout title="Join Game">
+    <Layout title="Join Game" darkMode={true}>
       <Container maxWidth="sm">
         <Stack spacing={4}>
           <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h5" sx={{ fontFamily: '"Bungee", cursive', color: '#2E7D32', mb: 0.5 }}>
+            <Typography variant="h5" sx={{ fontFamily: '"Bungee", cursive', color: '#00E676', mb: 0.5, letterSpacing: '0.05em' }}>
               Join a City
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: '#94A3B8' }}>
               Enter the room code to join an existing game
             </Typography>
           </Box>
-          <Stack spacing={3}>
-            <TextField
-              label="Room Code"
-              value={roomCode}
-              onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-              fullWidth
-              placeholder="Enter 6-character room code"
-              slotProps={{ htmlInput: { maxLength: 6, style: { textTransform: 'uppercase', fontFamily: 'monospace', fontSize: '1.4rem', letterSpacing: '0.25em', textAlign: 'center' } } }}
-              sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#E8E0D4' }, '&:hover fieldset': { borderColor: '#2E7D32' }, '&.Mui-focused fieldset': { borderColor: '#2E7D32', borderWidth: 2 } }, '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' } }}
-            />
-            <TextField
-              label="Your Name"
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              fullWidth
-              placeholder="Enter your player name"
-              sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#E8E0D4' }, '&:hover fieldset': { borderColor: '#2E7D32' }, '&.Mui-focused fieldset': { borderColor: '#2E7D32', borderWidth: 2 } }, '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' } }}
-            />
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              startIcon={<JoinIcon />}
-              onClick={handleJoin}
-              disabled={!roomCode.trim() || !playerName.trim() || joining}
-              sx={{ py: 1.5, fontFamily: '"Bungee", cursive', fontSize: '1rem', bgcolor: '#2E7D32', color: '#FFFFFF', boxShadow: '0 4px 16px rgba(46, 125, 50, 0.3)', '&:hover': { bgcolor: '#1B5E20', boxShadow: '0 6px 20px rgba(46, 125, 50, 0.4)' }, '&:disabled': { bgcolor: '#E8E0D4', boxShadow: 'none' } }}
-            >
-              {joining ? 'Connecting to City...' : 'Join Game'}
-            </Button>
-          </Stack>
+          
+          <Paper
+            elevation={0}
+            sx={{
+              p: 4,
+              width: '100%',
+              bgcolor: 'rgba(30, 41, 59, 0.7)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderLeft: '4px solid #00B0FF',
+              borderRadius: 4,
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+              color: '#F8FAFC',
+            }}
+          >
+            <Stack spacing={3.5}>
+              <TextField
+                label="Room Code"
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
+                fullWidth
+                placeholder="Enter 6-character room code"
+                slotProps={{ htmlInput: { maxLength: 6, style: { textTransform: 'uppercase', fontFamily: 'monospace', fontSize: '1.4rem', letterSpacing: '0.25em', textAlign: 'center', color: '#F8FAFC' } } }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'rgba(15, 23, 42, 0.4)',
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.1)' },
+                    '&:hover fieldset': { borderColor: '#00B0FF' },
+                    '&.Mui-focused fieldset': { borderColor: '#00B0FF', borderWidth: 2 },
+                  },
+                  '& .MuiInputLabel-root': { color: '#94A3B8' },
+                  '& .MuiInputLabel-root.Mui-focused': { color: '#00B0FF' },
+                }}
+              />
+              
+              <TextField
+                label="Your Name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                fullWidth
+                placeholder="Enter your player name"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    color: '#F8FAFC',
+                    backgroundColor: 'rgba(15, 23, 42, 0.4)',
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.1)' },
+                    '&:hover fieldset': { borderColor: '#00E676' },
+                    '&.Mui-focused fieldset': { borderColor: '#00E676', borderWidth: 2 },
+                  },
+                  '& .MuiInputLabel-root': { color: '#94A3B8' },
+                  '& .MuiInputLabel-root.Mui-focused': { color: '#00E676' },
+                }}
+              />
+              
+              <Button
+                variant="contained"
+                size="large"
+                fullWidth
+                startIcon={<JoinIcon />}
+                onClick={handleJoin}
+                disabled={!roomCode.trim() || !playerName.trim() || joining}
+                sx={{
+                  py: 2,
+                  fontFamily: '"Bungee", cursive',
+                  fontSize: '1.05rem',
+                  bgcolor: '#00B0FF',
+                  color: '#0F172A',
+                  fontWeight: 800,
+                  boxShadow: '0 8px 24px rgba(0, 176, 255, 0.25)',
+                  '&:hover': {
+                    bgcolor: '#0091EA',
+                    boxShadow: '0 12px 30px rgba(0, 176, 255, 0.4)',
+                  },
+                  '&.Mui-disabled': {
+                    bgcolor: 'rgba(255,255,255,0.05)',
+                    color: 'rgba(255,255,255,0.2)',
+                  }
+                }}
+              >
+                {joining ? 'Connecting to City...' : 'Join Game'}
+              </Button>
+            </Stack>
+          </Paper>
+          
           <Stack direction="row" spacing={0.5} sx={{ justifyContent: 'center', flexWrap: 'wrap', gap: 0.5 }}>
             {DISTRICT_STRIPS.map((color, i) => (
-              <Box key={i} sx={{ width: 32, height: 6, borderRadius: 3, bgcolor: color, opacity: 0.7, transition: 'opacity 0.2s', '&:hover': { opacity: 1 } }} />
+              <Box key={i} sx={{ width: 36, height: 6, borderRadius: 3, bgcolor: color, opacity: 0.8, boxShadow: `0 0 6px ${color}` }} />
             ))}
           </Stack>
         </Stack>
       </Container>
+      
       <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar((s) => ({ ...s, open: false }))}>
         <Alert severity={snackbar.severity} onClose={() => setSnackbar((s) => ({ ...s, open: false }))} sx={{ borderRadius: 2 }}>
           {snackbar.message}

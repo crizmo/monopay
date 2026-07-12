@@ -1,93 +1,113 @@
-# Monopay - Monopoly City Banking
+# MonoPay - Serverless Monopoly City Electronic Trading Unit & Dice Banker App
 
-A real-time, peer-to-peer banking application for Monopoly City. Zero backend, zero database - runs entirely in the browser using WebRTC via Trystero.
+MonoPay is a high-performance, real-time, peer-to-peer web application designed to serve as the ultimate banking companion and electronic trading unit emulator for **Monopoly City** (and traditional Monopoly board games). 
 
-## Features
+Designed to completely eliminate physical paper money, calculator errors, and sluggish gameplay, MonoPay coordinates transactions, balance tallies, and board game actions serverlessly. By utilizing WebRTC, clients connect directly from browser-to-browser with zero database storage, user sign-ups, or cloud servers.
 
-- **Peer-to-Peer**: Uses Trystero (Nostr signaling) for direct browser-to-browser connections
-- **No Server Required**: No PeerJS cloud, no Firebase, no backend - just WebRTC
-- **Real-time Sync**: Balances update instantly across all connected devices
-- **QR Code Join**: Players scan a QR code or click a link to join
-- **Monopoly City Theme**: City skyline visuals, property district colors, building icons
-- **$36.7M Starting Balance**: Matches the actual Monopoly City board game
-- **Quick Actions**: Pass GO (+$2M), Build Residential, Build Industrial, Stadium, Tax, etc.
-- **Custom Transactions**: Any amount with a description
-- **Transfer Funds**: Player-to-player transfers
-- **Transaction History**: Full audit trail with search and filters
-- **Animated Balances**: Smooth number animations with color flash on changes
-- **Responsive**: Works on mobile and desktop
-- **Dark Theme**: Night-city sky with gold Monopoly Tower accents
+---
 
-## Tech Stack
+## 🎲 Core Features & SEO Highlights
 
-- **Vite** - Build tool
-- **React 19** - UI framework
-- **TypeScript** - Type safety
-- **Material UI (MUI v9)** - Component library
-- **React Router** - Client-side routing
-- **Trystero** - WebRTC peer-to-peer (Nostr signaling)
-- **qrcode** - QR code generation
-- **uuid** - Unique ID generation
+### 1. Monopoly City Electronic Trading Unit Emulator
+MonoPay features a high-fidelity digital emulation of the physical **Monopoly City Trading Unit** device:
+* **Deal / Auction Dome**: Central button featuring the red & blue handshake logo that triggers a **50-second auction countdown**. The surrounding translucent ring pulses red, mimicking the physical LED lights.
+* **Building Roll Selector**: Emulates the corrugated side rolling switch. It cycles light indicators around the outer ring sector numbers (`1`, `2`, `3`) or the Railroad track symbol (`🚂`) to determine block construction capacities.
+* **Synthesized Audio signals**: Authentic retro 8-bit sound effects (rolling tick-tocks, dual-tone success chimes, and emergency siren alarms for timed-out auctions) generated entirely on-screen using the browser's Web Audio API.
 
-## Getting Started
+### 2. Built-in Monopoly Dice Roller
+No physical dice available? Banker controls include a built-in double 6-sided dice roller with realistic rolling animations, dot face renderings, and auto-sum calculation indicators.
+
+### 3. Serverless WebRTC Mesh Connection
+Uses Trystero with custom-configured WebSocket (`wss://`) torrent matchmaking trackers and Google public STUN servers for robust NAT traversal. Connecting 3+ players simultaneously is instant, seamless, and secure.
+
+### 4. Browser Refresh Auto-Restoration
+If a player or banker accidentally reloads their page, a custom session hook automatically detects active routes, recovers the lobby parameters from `localStorage`, and re-connects the WebRTC channels without terminating the ongoing session.
+
+### 5. Advanced Ledgers & Transaction Ledger
+* **Animated Balances**: Balance values count up or down dynamically with flashing color cues (green for credit, red for debit).
+* **Transaction Ledger**: Search, audit, and filter the complete chronological history of credits, debits, and transfers.
+* **Flexible Banker Controls**: Easily issue player rewards (Pass GO salary, stadium investments, rent credits) and custom player penalties (industrial building expenses, custom tax debits).
+
+---
+
+## 🛠️ Technology Stack
+
+* **Vite** — Lightning-fast development environment and bundler.
+* **React 19** — Next-generation rendering framework for snappy UI updates.
+* **TypeScript** — Absolute type safety across WebRTC packets and actions.
+* **Material UI (MUI v9)** — Component system customized with dark metallic styling, grid structures, and responsive layouts.
+* **Trystero** — Serverless WebRTC signaling using public WebSocket networks.
+* **Web Audio API** — High-speed browser synthesis for retro game sounds.
+* **React Router** — SP Routing for `/create`, `/join`, `/banker`, and `/player`.
+
+---
+
+## 🚀 Getting Started Locally
+
+To launch MonoPay on your local machine, run:
 
 ```bash
+# Clone the repository
+git clone https://github.com/crizmo/monopay.git
+cd monopay
+
+# Install dependencies
 npm install
+
+# Start local hot-reloading dev server
 npm run dev
 ```
 
-## Build
+The app will start at `http://localhost:5173`. Open multiple tabs or share your local IP to connect multiple players!
+
+---
+
+## 📦 Building & Production Release
+
+To compile a highly optimized static build for production hosting (Vercel, Netlify, or GitHub Pages):
 
 ```bash
 npm run build
 ```
 
-Output is in `dist/` - deploy to any static host (Vercel, Netlify, GitHub Pages).
+The production assets will be outputted to the `dist/` directory, ready to be hosted on any static platform.
 
-## How to Play
+---
 
-1. One player opens the app and clicks **Create Game**
-2. Enter a room name, set the starting balance ($36.7M default), and click **Create Room**
-3. Share the room code, link, or QR code with other players
-4. Players click **Join Game**, enter the code and their name
-5. The banker clicks **Start Game** when everyone is connected
-6. The banker can add/remove money, transfer between players, and use quick actions
-7. Players see their balance and transaction history in real-time
+## 📖 How to Use MonoPay
 
-## Architecture
+### Setup & Joining
+1. **The Banker**: Opens the app, clicks **Create Lobby**, sets the Room Name (e.g. *Sunday Night City*), and adjusts the starting balance (Default `$36.7M` for Monopoly City).
+2. **Invite Players**: The Banker displays the Room QR code, link, or Room ID to participants.
+3. **The Players**: Click **Join Lobby**, enter the room code, input their custom player name, and click join.
+4. **Game Start**: Once all players have joined, the Banker clicks **Start Game** to take everyone to the dashboard.
 
-- **Host** stores all game state in memory in their browser
-- **Clients** connect directly to the host via WebRTC (Trystero/Nostr)
-- The host broadcasts state updates to all connected clients via typed actions
-- If the host closes their browser, the game ends
-- No data is sent to any server
+### Performing Actions
+* **Paying the Bank**: Players click **Pay Bank** in their "Your Actions" card. The dialog closes automatically upon transfer completion.
+* **Sending Money**: Click **Send Money**, pick the target player, enter the custom amount, and click Send.
+* **Operating the Trading Unit**: The Banker scrolls to "Banker Controls", uses the side slider to spin building limits (1-3, Railroad), and clicks the handshake button to initiate auction bid limits.
 
-## Project Structure
+---
+
+## 📂 Project Architecture
 
 ```
-src/
-  components/       # Reusable UI components (CitySkyline, PlayerCard, etc.)
-  pages/            # Route-level page components
-  hooks/            # Custom React hooks
-  services/         # Game logic, QR, storage services
-  theme/            # MUI dark theme + Monopoly City colors
-  types/            # TypeScript interfaces and types
-  utils/            # Formatting and helper utilities
+monopay/
+├── public/                 # Static assets & icons
+├── src/
+│   ├── components/         # Reusable widgets (TradingUnit, AnimatedBalance, PlayerCard)
+│   ├── pages/              # Route views (HomePage, CreateGamePage, GameDashboardPage)
+│   ├── services/           # RoomService (P2P channels) & GameService (states)
+│   ├── theme/              # Custom dark-slate color design system & fonts
+│   ├── types/              # TS interface structures for game events & balances
+│   └── utils/              # Money formats & helper calculations
+├── index.html              # Entry DOM containing main SEO tag injection
+├── vite.config.ts          # Vite compilation config
+└── package.json            # Script runs & dependencies manifest
 ```
 
-## Deployment
+---
 
-### Vercel
+## 📜 License
 
-1. Push to a Git repository
-2. Import in Vercel
-3. Framework preset: Vite
-4. Build command: `npm run build`
-5. Output directory: `dist`
-6. Deploy
-
-No environment variables required.
-
-## License
-
-MIT
+MIT License. Feel free to clone, edit, or deploy custom Monopoly bank rules!

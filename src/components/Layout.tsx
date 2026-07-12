@@ -16,26 +16,35 @@ interface LayoutProps {
   children: ReactNode;
   title?: string;
   actions?: ReactNode;
+  darkMode?: boolean;
 }
 
-export function Layout({ children, title = 'MONOPAY', actions }: LayoutProps) {
+export function Layout({ children, title = 'MONOPAY', actions, darkMode = false }: LayoutProps) {
   const navigate = useNavigate();
 
+  const themeBg = darkMode ? '#0F172A' : '#F5F0E8';
+  const headerBg = darkMode ? 'rgba(15, 23, 42, 0.9)' : '#FFFFFF';
+  const borderCol = darkMode ? 'rgba(255, 255, 255, 0.08)' : '#E0E0E0';
+  const titleCol = darkMode ? '#00E676' : '#2E7D32';
+  const logoCol = darkMode ? '#00E676' : '#2E7D32';
+
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#F5F0E8' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: themeBg, transition: 'background-color 0.2s ease', color: darkMode ? '#F8FAFC' : '#1A1A1A' }}>
       <AppBar
         position="static"
         elevation={0}
         sx={{
-          bgcolor: '#FFFFFF',
-          borderBottom: '1px solid #E0E0E0',
+          bgcolor: headerBg,
+          borderBottom: `1px solid ${borderCol}`,
+          backdropFilter: darkMode ? 'blur(8px)' : 'none',
+          color: darkMode ? '#F8FAFC' : '#1A1A1A',
         }}
       >
         <Toolbar>
           <IconButton
             edge="start"
             onClick={() => navigate('/')}
-            sx={{ mr: 2, color: '#2E7D32' }}
+            sx={{ mr: 2, color: logoCol }}
           >
             <LogoIcon sx={{ fontSize: 32 }} />
           </IconButton>
@@ -44,7 +53,7 @@ export function Layout({ children, title = 'MONOPAY', actions }: LayoutProps) {
             sx={{
               fontWeight: 700,
               fontFamily: '"Bungee", cursive',
-              color: '#2E7D32',
+              color: titleCol,
               letterSpacing: '0.05em',
               flex: 1,
             }}

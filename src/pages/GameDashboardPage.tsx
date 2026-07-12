@@ -32,6 +32,7 @@ import { PlayerCard } from '../components/PlayerCard';
 import { TransferDialog } from '../components/TransferDialog';
 import { AnimatedBalance } from '../components/AnimatedBalance';
 import { CustomAmountDialog } from '../components/CustomAmountDialog';
+import { TradingUnit } from '../components/TradingUnit';
 import { roomService } from '../services/RoomService';
 import { addPlayer } from '../services/GameService';
 import type { GameState, TransactionType } from '../types';
@@ -63,6 +64,27 @@ export function GameDashboardPage() {
     const interval = setInterval(loadState, 500);
     return () => clearInterval(interval);
   }, [loadState]);
+
+  // Restore WebRTC connection on refresh/reload
+  useEffect(() => {
+    if (!roomService.role) {
+      const raw = localStorage.getItem('monopay_game_state');
+      if (raw) {
+        try {
+          const savedState = JSON.parse(raw) as GameState;
+          if (savedState && savedState.roomId) {
+            if (window.location.pathname === '/banker') {
+              roomService.initHost(savedState.roomId);
+            } else if (window.location.pathname === '/player') {
+              roomService.initClient(savedState.roomId);
+            }
+          }
+        } catch (e) {
+          console.error('Failed to restore roomService:', e);
+        }
+      }
+    }
+  }, []);
 
   const gameStateRef = useRef<GameState | null>(null);
   gameStateRef.current = gameState;
@@ -308,6 +330,11 @@ export function GameDashboardPage() {
                 <Typography variant="caption" color="text.secondary" sx={{ ml: 1, fontSize: '0.65rem' }}>(select a player first)</Typography>
               )}
             </Stack>
+
+            {/* Electronic Trading Unit Emulator */}
+            <Box sx={{ mb: 3 }}>
+              <TradingUnit />
+            </Box>
 
             {/* Banker can give money (credits) */}
             <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600, px: 0.5, fontSize: '0.65rem' }}>Give Money</Typography>
