@@ -32,7 +32,6 @@ import { PlayerCard } from '../components/PlayerCard';
 import { TransferDialog } from '../components/TransferDialog';
 import { AnimatedBalance } from '../components/AnimatedBalance';
 import { CustomAmountDialog } from '../components/CustomAmountDialog';
-import { TradingUnit } from '../components/TradingUnit';
 import { roomService } from '../services/RoomService';
 import { addPlayer } from '../services/GameService';
 import type { GameState, TransactionType } from '../types';
@@ -309,11 +308,6 @@ export function GameDashboardPage() {
                 <Typography variant="caption" color="text.secondary" sx={{ ml: 1, fontSize: '0.65rem' }}>(select a player first)</Typography>
               )}
             </Stack>
-
-            {/* Electronic Trading Unit Emulator */}
-            <Box sx={{ mb: 3 }}>
-              <TradingUnit />
-            </Box>
 
             {/* Banker can give money (credits) */}
             <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 600, px: 0.5, fontSize: '0.65rem' }}>Give Money</Typography>
