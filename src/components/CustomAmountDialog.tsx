@@ -19,12 +19,13 @@ interface CustomAmountDialogProps {
   onClose: () => void;
   onConfirm: (amount: number, description: string, type: TransactionType) => void;
   playerName: string;
+  defaultType?: TransactionType;
 }
 
-export function CustomAmountDialog({ open, onClose, onConfirm, playerName }: CustomAmountDialogProps) {
+export function CustomAmountDialog({ open, onClose, onConfirm, playerName, defaultType = 'credit' }: CustomAmountDialogProps) {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [type, setType] = useState<TransactionType>('credit');
+  const [type, setType] = useState<TransactionType>(defaultType);
 
   const handleConfirm = () => {
     const parsed = parseFloat(amount);

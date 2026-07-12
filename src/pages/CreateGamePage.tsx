@@ -29,8 +29,8 @@ import { useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { WaitingAnimation } from '../components/WaitingAnimation';
 import { generateQRCode, generateJoinLink } from '../services/QRService';
-import { joinRoom, selfId } from 'trystero';
-import type { GameState, Player } from '../types';
+import { roomService, selfId } from '../services/RoomService';
+import type { GameState } from '../types';
 import { PLAYER_COLORS, DEFAULT_STARTING_BALANCE, DISTRICT_STRIPS } from '../types';
 import { addPlayer, createGameState, startGame as startGameState } from '../services/GameService';
 import { formatMoney } from '../utils/format';
@@ -55,36 +55,19 @@ export function CreateGamePage() {
   const [roomCode, setRoomCode] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const [gameState, setGameState] = useState<GameState | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const roomRef = useRef<any>(null);
   const gameStateRef = useRef<GameState | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const stateUpdateRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const joinRequestRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rejectJoinRef = useRef<any>(null);
 
   const broadcastState = useCallback((state: GameState) => {
-    if (stateUpdateRef.current) {
-      stateUpdateRef.current.send(state);
-    }
+    gameStateRef.current = state;
+    setGameState(state);
+    roomService.broadcastState(state);
   }, []);
 
   const handleCreateGame = async () => {
     if (!roomName.trim()) return;
 
     const code = generateRoomCode();
-    const room = joinRoom({ appId: 'com.monopay' }, code);
-    roomRef.current = room;
-
-    const stateUpdate = room.makeAction('state-update');
-    const joinRequest = room.makeAction('join-request');
-    const rejectJoin = room.makeAction('reject-join');
-    stateUpdateRef.current = stateUpdate;
-    joinRequestRef.current = joinRequest;
-    rejectJoinRef.current = rejectJoin;
+    roomService.initHost(code);
 
     const state = createGameState({ roomName, startingBalance, maxPlayers }, selfId);
     state.roomId = code;
@@ -98,16 +81,18 @@ export function CreateGamePage() {
     setQrDataUrl(qr);
     setStep('lobby');
 
-    room.onPeerJoin = (peerId: string) => {
+    const unsubJoin = roomService.onJoinRequest((data, peerId) => {
       const currentState = gameStateRef.current;
       if (!currentState) return;
-      const peerIds = currentState.players.map((p) => p.peerId);
-      if (!peerIds.includes(peerId)) {
+      const result = addPlayer(currentState, data.playerName, peerId);
+      if ('error' in result) {
+        roomService.sendRejectJoin(result.error, peerId);
         return;
       }
-    };
+      broadcastState(result.state);
+    });
 
-    room.onPeerLeave = (peerId: string) => {
+    const unsubLeave = roomService.onPeerLeave((peerId) => {
       const currentState = gameStateRef.current;
       if (!currentState) return;
       const updated: GameState = {
@@ -116,25 +101,15 @@ export function CreateGamePage() {
           p.peerId === peerId ? { ...p, isConnected: false } : p
         ),
       };
-      gameStateRef.current = updated;
-      setGameState(updated);
       broadcastState(updated);
-    };
+    });
 
-    joinRequest.onMessage = (rawData, { peerId }) => {
-      const data = rawData as { playerName: string };
-      const currentState = gameStateRef.current;
-      if (!currentState) return;
-      const result = addPlayer(currentState, data.playerName, peerId);
-      if ('error' in result) {
-        rejectJoin.send({ reason: result.error });
-        return;
-      }
-      gameStateRef.current = result.state;
-      setGameState(result.state);
-      broadcastState(result.state);
-    };
+    unsubJoinRef.current = unsubJoin;
+    unsubLeaveRef.current = unsubLeave;
   };
+
+  const unsubJoinRef = useRef<(() => void) | null>(null);
+  const unsubLeaveRef = useRef<(() => void) | null>(null);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(joinLink);
@@ -149,10 +124,8 @@ export function CreateGamePage() {
   const handleStartGame = () => {
     if (!gameState || gameState.players.length === 0) return;
     const started = startGameState(gameState);
-    gameStateRef.current = started;
-    setGameState(started);
     broadcastState(started);
-    window.location.href = '/banker';
+    navigate('/banker');
   };
 
   const handleRemovePlayer = (playerId: string) => {
@@ -161,14 +134,13 @@ export function CreateGamePage() {
       ...gameState,
       players: gameState.players.filter((p) => p.id !== playerId),
     };
-    gameStateRef.current = updated;
-    setGameState(updated);
     broadcastState(updated);
   };
 
   useEffect(() => {
     return () => {
-      roomRef.current?.leave();
+      unsubJoinRef.current?.();
+      unsubLeaveRef.current?.();
     };
   }, []);
 
@@ -402,7 +374,7 @@ export function CreateGamePage() {
               )}
 
               <Stack spacing={1.5}>
-                {gameState?.players.map((player, idx) => (
+                {gameState?.players.map((player) => (
                   <Card
                     key={player.id}
                     elevation={0}

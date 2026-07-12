@@ -81,6 +81,8 @@ export const DISTRICT_STRIPS = [
   PROPERTY_COLORS.brown,
 ];
 
+export const BANK_PLAYER_ID = '__BANK__';
+export const BANK_PLAYER_NAME = 'Bank';
 export const DEFAULT_STARTING_BALANCE = 36_700_000;
 
 export const DEFAULT_QUICK_ACTIONS: QuickActionPreset[] = [
