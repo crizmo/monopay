@@ -8,9 +8,9 @@ interface AnimatedBalanceProps {
 }
 
 const sizeMap = {
-  small: { fontSize: 'clamp(1.1rem, 4vw, 1.5rem)', subtitle: '0.875rem' },
-  medium: { fontSize: 'clamp(1.6rem, 7vw, 2.8rem)', subtitle: '1rem' },
-  large: { fontSize: 'clamp(2.1rem, 10vw, 4rem)', subtitle: '1.25rem' },
+  small: { fontSize: 'clamp(1.1rem, 4vw, 1.4rem)', subtitle: '0.875rem' },
+  medium: { fontSize: 'clamp(1.5rem, 7vw, 2.5rem)', subtitle: '1rem' },
+  large: { fontSize: 'clamp(1.8rem, 9vw, 3.5rem)', subtitle: '1.25rem' },
 };
 
 export function AnimatedBalance({ balance, size = 'medium' }: AnimatedBalanceProps) {
