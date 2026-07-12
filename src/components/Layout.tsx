@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -21,6 +21,14 @@ interface LayoutProps {
 
 export function Layout({ children, title = 'MONOPAY', actions, darkMode = false }: LayoutProps) {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (title === 'MONOPAY') {
+      document.title = 'MonoPay - Serverless Monopoly City Electronic Trading Unit & Dice Banker';
+    } else {
+      document.title = `${title} | MonoPay`;
+    }
+  }, [title]);
 
   const themeBg = darkMode ? '#0F172A' : '#F5F0E8';
   const headerBg = darkMode ? 'rgba(15, 23, 42, 0.9)' : '#FFFFFF';
